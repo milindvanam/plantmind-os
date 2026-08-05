@@ -1,20 +1,14 @@
-﻿"use client";
+"use client";
 
-import Link from "next/link";
 import {
   Activity,
   ArrowRight,
   BookOpenCheck,
   Boxes,
   CircleDashed,
-  ClipboardCheck,
   Database,
   Factory,
-  FileSearch,
-  Gauge,
-  LockKeyhole,
   ShieldCheck,
-  Sparkles,
   Wrench
 } from "lucide-react";
 import {
@@ -23,8 +17,6 @@ import {
   Badge,
   Breadcrumb,
   Button,
-  Card,
-  ConfidenceIndicator,
   EmptyState,
   EvidenceIndicator,
   KpiCard,
@@ -36,6 +28,7 @@ import {
   TableShell,
   Tabs
 } from "@/components/ui";
+import { ExecutiveDashboard } from "@/features/command/executive-dashboard";
 import { useScenario } from "@/features/scenario/scenario-provider";
 import { sampleAt } from "@/lib/scenario";
 
@@ -86,7 +79,7 @@ const configs = {
 
 export function PrototypePage({ kind }: { kind: Kind }) {
   const config = configs[kind];
-  const { state, stage, timestamp, jump } = useScenario();
+  const { state, stage, timestamp } = useScenario();
   const sample = sampleAt(state.elapsedMinutes);
   return (
     <>
@@ -102,13 +95,15 @@ export function PrototypePage({ kind }: { kind: Kind }) {
           </div>
         }
       />
-      <Alert title="Sprint 1 foundation" tone="info">
-        This route validates the shared shell, replay state and intended information hierarchy.
-        Later-sprint intelligence and workflows are clearly withheld.
+      <Alert
+        title={kind === "command" ? "Sprint 2 · Executive Dashboard" : "Sprint 1 foundation"}
+        tone="info"
+      >
+        {kind === "command"
+          ? "This milestone composes governed replay truth into the executive decision hierarchy. Dependent engines remain explicitly unavailable."
+          : "This route validates the shared shell, replay state and intended information hierarchy. Later-sprint intelligence and workflows are clearly withheld."}
       </Alert>
-      {kind === "command" && (
-        <Command stage={stage} timestamp={timestamp} sample={sample} jump={() => jump("warning")} />
-      )}
+      {kind === "command" && <ExecutiveDashboard />}
       {kind === "operations" && <Operations stage={stage} sample={sample} />}
       {kind === "asset" && <Asset stage={stage} timestamp={timestamp} sample={sample} />}
       {kind === "investigation" && <Investigation />}
@@ -123,91 +118,6 @@ type LiveProps = {
   sample: ReturnType<typeof sampleAt>;
   timestamp?: string;
 };
-
-function Command({ stage, sample, timestamp, jump }: LiveProps & { jump: () => void }) {
-  return (
-    <div className="page-stack">
-      <section className="hero-grid">
-        <Card className="priority-card">
-          <div className="priority-top">
-            <Badge tone="ai">DECISION SURFACE · FOUNDATION</Badge>
-            <StatusIndicator label={stage.label} tone={stage.state} />
-          </div>
-          <div>
-            <span className="eyebrow">Priority operating context</span>
-            <h2>P-204A replay is at {stage.shortLabel.toLowerCase()}</h2>
-            <p>{stage.description} No diagnosis or financial claim is made in Sprint 1.</p>
-          </div>
-          <div className="hero-actions">
-            <Link className="button button-primary" href="/assets/P-204A">
-              Inspect asset <ArrowRight size={15} />
-            </Link>
-            <Button variant="secondary" onClick={jump}>
-              Jump to warning
-            </Button>
-          </div>
-          <small>Scenario time · {timestamp}</small>
-        </Card>
-        <Panel>
-          <SectionHeader
-            title="Trust posture"
-            detail="Visible foundations for governed intelligence"
-          />
-          <div className="trust-list">
-            <EvidenceIndicator status="Synthetic sources labeled" />
-            <ConfidenceIndicator value={100} />
-            <AuditStatusLabel />
-            <Badge tone="neutral">
-              <LockKeyhole size={13} />
-              Read-only prototype
-            </Badge>
-          </div>
-        </Panel>
-      </section>
-      <div className="kpi-grid">
-        <KpiCard
-          label="Pump vibration"
-          value={sample.vibration}
-          unit="mm/s RMS"
-          detail="Replayed sensor value"
-          tone={stage.state}
-        />
-        <KpiCard
-          label="Discharge pressure"
-          value={sample.pressure}
-          unit="bar"
-          detail="Replayed process value"
-        />
-        <KpiCard
-          label="Flow rate"
-          value={sample.flow}
-          unit="m³/h"
-          detail="Replayed process value"
-        />
-        <KpiCard
-          label="Line throughput"
-          value={sample.throughput}
-          unit="% plan"
-          detail="Simulated production context"
-        />
-      </div>
-      <Panel>
-        <SectionHeader
-          title="Evidence-to-action journey"
-          detail="Six connected route foundations"
-        />
-        <div className="journey">
-          <JourneyStep icon={Gauge} title="Command" detail="Prioritise" active />
-          <JourneyStep icon={Factory} title="Operations" detail="Context" />
-          <JourneyStep icon={Activity} title="Asset" detail="Inspect" />
-          <JourneyStep icon={FileSearch} title="Investigation" detail="Explain" />
-          <JourneyStep icon={Sparkles} title="Briefs" detail="Compare" />
-          <JourneyStep icon={ClipboardCheck} title="Intervention" detail="Govern" />
-        </div>
-      </Panel>
-    </div>
-  );
-}
 
 function Operations({ stage, sample }: LiveProps) {
   return (
@@ -483,27 +393,6 @@ function Intervention() {
   );
 }
 
-function JourneyStep({
-  icon: Icon,
-  title,
-  detail,
-  active
-}: {
-  icon: typeof Gauge;
-  title: string;
-  detail: string;
-  active?: boolean;
-}) {
-  return (
-    <div className={active ? "journey-step active" : "journey-step"}>
-      <Icon />
-      <span>
-        <strong>{title}</strong>
-        <small>{detail}</small>
-      </span>
-    </div>
-  );
-}
 function ProcessNode({
   title,
   detail,
