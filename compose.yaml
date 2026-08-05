@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: plantmind
+      POSTGRES_USER: plantmind
+      POSTGRES_PASSWORD: plantmind
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U plantmind -d plantmind"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - plantmind_postgres:/var/lib/postgresql/data
+
+volumes:
+  plantmind_postgres:
