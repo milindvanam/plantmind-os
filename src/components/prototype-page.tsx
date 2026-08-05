@@ -30,6 +30,7 @@ import {
 } from "@/components/ui";
 import { ExecutiveDashboard } from "@/features/command/executive-dashboard";
 import { useScenario } from "@/features/scenario/scenario-provider";
+import { IndustrialTimeline } from "@/features/timeline/industrial-timeline";
 import { sampleAt } from "@/lib/scenario";
 
 type Kind = "command" | "operations" | "asset" | "investigation" | "executives" | "intervention";
@@ -51,7 +52,7 @@ const configs = {
     eyebrow: "Asset intelligence",
     title: "Cooling Water Pump P-204A",
     description:
-      "Engineering context, current replay values and the evidence surfaces planned for the vertical journey.",
+      "Engineering context, deterministic replay history and source-linked measurements for the vertical journey.",
     crumbs: ["PlantMind", "Assets", "P-204A"]
   },
   investigation: {
@@ -96,12 +97,20 @@ export function PrototypePage({ kind }: { kind: Kind }) {
         }
       />
       <Alert
-        title={kind === "command" ? "Sprint 2 · Executive Dashboard" : "Sprint 1 foundation"}
+        title={
+          kind === "command"
+            ? "Sprint 2 · Executive Dashboard"
+            : kind === "asset"
+              ? "Sprint 2 · Industrial Timeline"
+              : "Sprint 1 foundation"
+        }
         tone="info"
       >
         {kind === "command"
           ? "This milestone composes governed replay truth into the executive decision hierarchy. Dependent engines remain explicitly unavailable."
-          : "This route validates the shared shell, replay state and intended information hierarchy. Later-sprint intelligence and workflows are clearly withheld."}
+          : kind === "asset"
+            ? "The industrial timeline visualizes deterministic replay history and configured stage anchors. It does not perform anomaly detection or AI interpretation."
+            : "This route validates the shared shell, replay state and intended information hierarchy. Later-sprint intelligence and workflows are clearly withheld."}
       </Alert>
       {kind === "command" && <ExecutiveDashboard />}
       {kind === "operations" && <Operations stage={stage} sample={sample} />}
@@ -202,6 +211,7 @@ function Asset({ stage, sample, timestamp }: LiveProps) {
           <span>As of {timestamp}</span>
         </div>
       </section>
+      <IndustrialTimeline />
       <div className="split-grid wide-left">
         <Panel>
           <SectionHeader
@@ -223,7 +233,10 @@ function Asset({ stage, sample, timestamp }: LiveProps) {
           </div>
         </Panel>
         <Panel>
-          <SectionHeader title="Evidence foundation" detail="No anomaly conclusion in Sprint 1" />
+          <SectionHeader
+            title="Evidence foundation"
+            detail="Source context only · no analytical conclusion"
+          />
           <div className="trust-list">
             <EvidenceIndicator status="5 replay signals" />
             <Badge tone="evidence">

@@ -1,4 +1,4 @@
-﻿# API Guide
+# API Guide
 
 ## Existing route handlers
 
@@ -18,3 +18,7 @@ Milestone 1 introduces no network endpoint. `buildCommandSnapshot(state)` is an 
 - current non-governed action status.
 
 When later server query work is authorized, the approved dashboard API must preserve these unavailable/null semantics and safe error codes (`RUN_NOT_FOUND`, `SNAPSHOT_INCOMPLETE`).
+
+## Industrial Timeline
+
+Milestone 2 introduces no endpoint. `buildTimelineModel(elapsedMinutes)` is a pure internal adapter over the existing replay fixture. It returns 49 samples per displayed signal, six configured stage segments, the active cursor, and display metadata. It returns no anomaly, diagnosis, threshold, evidence-quality, confidence, impact, or AI result.

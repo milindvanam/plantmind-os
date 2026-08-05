@@ -1,4 +1,4 @@
-﻿# Decision Log
+# Decision Log
 
 ## ADR-S2-001 — Lock Sprint 1 with a release tag
 
@@ -15,3 +15,11 @@ Decision: adopt. Impact, evidence quality, confidence, anomaly, Operations Execu
 ## ADR-S2-004 — No schema or dependency change for Milestone 1
 
 Decision: adopt. Current Sprint 1 data and UI primitives are sufficient for the bounded Command composition.
+
+## ADR-S2-005 — Place the Industrial Timeline on Asset Intelligence
+
+Decision: adopt. The approved journey introduces the anomaly timeline while inspecting P-204A, so the visualization extends `/assets/P-204A` without adding or renaming a route.
+
+## ADR-S2-006 — Visualize replay truth without analytical claims
+
+Decision: adopt. The timeline displays deterministic samples and configured stage anchors only. Display domains are viewport scales, not operating limits. Anomaly, diagnosis, evidence quality, confidence, and AI interpretation remain unavailable until their scheduled priorities.

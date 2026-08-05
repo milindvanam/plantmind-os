@@ -1,4 +1,4 @@
-﻿# Component Library
+# Component Library
 
 Sprint 1 primitives remain the shared component baseline.
 
@@ -16,3 +16,13 @@ Sprint 1 primitives remain the shared component baseline.
 | `TrustStrip` | Evidence, confidence, audit, and control limits | indeterminate/not-scored/traceable/read-only |
 
 All compositions reuse Sprint 1 tokens and primitives. They introduce no new component dependency.
+
+## Sprint 2 Milestone 2 compositions
+
+| Component | Purpose | States |
+|---|---|---|
+| `IndustrialTimeline` | Source-linked eight-hour replay history | ready, loading, empty, error, disabled |
+| `SignalLane` | One measurement, unit, source, domain, trace and cursor | vibration, temperature, flow |
+| `TimelineTrustStrip` | Audit, source count, evidence, confidence and read-only boundaries | traceable/indeterminate/not-scored/read-only |
+
+The visualization uses native semantic HTML, CSS, and SVG chart primitives. No chart dependency or duplicate design system was introduced.

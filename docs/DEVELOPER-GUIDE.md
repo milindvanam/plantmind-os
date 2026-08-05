@@ -1,4 +1,4 @@
-﻿# Developer Guide
+# Developer Guide
 
 ## Baseline protection
 
@@ -24,3 +24,14 @@ npm.cmd audit
 ## Command feature conventions
 
 Keep deterministic mapping in `command-snapshot.ts` and rendering in `executive-dashboard.tsx`. Never calculate impact, evidence quality, confidence, anomaly, or AI content in presentational components. New data must include source, unit, as-of, truth, and availability.
+
+## Timeline feature conventions
+
+Keep timeline history generation in `timeline-model.ts` and rendering in `industrial-timeline.tsx`. Display domains are presentation metadata and must not be described as thresholds. Timeline interactions must use `ScenarioProvider.jump`; do not create another replay controller.
+
+Founder review captures can be regenerated while the local app is running:
+
+```powershell
+npx.cmd tsx scripts/capture-founder-review.ts baseline
+npx.cmd tsx scripts/capture-founder-review.ts priority-2
+```

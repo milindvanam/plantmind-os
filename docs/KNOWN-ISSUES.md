@@ -14,3 +14,10 @@
 - The host in-app browser/image viewer could not initialize because of a Windows ACL helper fault during Milestone 1 visual QA. Playwright Chromium capture and responsive tests completed successfully.
 
 These are explicit product states, not silent failures.
+
+## Milestone 2 limitations
+
+- Timeline display domains are visualization scales, not approved alarm or safety thresholds.
+- The timeline uses the deterministic prototype fixture rather than historian-backed time-series retrieval.
+- Stage anchors are configured replay events, not detected anomalies.
+- Only three decision-relevant signals are plotted to preserve executive readability; pressure and power remain available in the existing sensor snapshot.
