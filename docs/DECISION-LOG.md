@@ -23,3 +23,9 @@ Decision: adopt. The approved journey introduces the anomaly timeline while insp
 ## ADR-S2-006 — Visualize replay truth without analytical claims
 
 Decision: adopt. The timeline displays deterministic samples and configured stage anchors only. Display domains are viewport scales, not operating limits. Anomaly, diagnosis, evidence quality, confidence, and AI interpretation remain unavailable until their scheduled priorities.
+
+## ADR-S2-007 — Mandatory Founder Review visual gate
+
+Decision: adopt. Every milestone ends with a successful build, a running local development URL, Chromium route and interaction verification, desktop/mobile and dark/light screenshots, explicit loading/empty/error/disabled review captures, recorded test results, and a Founder Review Report. Product work stops until explicit founder approval.
+
+Review-state query parameters are development-only, reuse approved Dashboard compositions, and resolve to ready outside development. They do not create a product route or production capability.

@@ -35,3 +35,14 @@ Founder review captures can be regenerated while the local app is running:
 npx.cmd tsx scripts/capture-founder-review.ts baseline
 npx.cmd tsx scripts/capture-founder-review.ts priority-2
 ```
+
+## Mandatory Founder Review gate
+
+Follow `docs/FOUNDER-REVIEW-WORKFLOW.md` at the end of every milestone. With the local development server running, execute:
+
+```powershell
+npm.cmd run test:e2e
+npm.cmd run review:capture
+```
+
+Do not begin the next product priority until the report and screenshots have received explicit founder approval.

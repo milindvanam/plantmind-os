@@ -28,7 +28,7 @@ import {
   TableShell,
   Tabs
 } from "@/components/ui";
-import { ExecutiveDashboard } from "@/features/command/executive-dashboard";
+import { FounderReviewCommand } from "@/features/review/founder-review-command";
 import { useScenario } from "@/features/scenario/scenario-provider";
 import { IndustrialTimeline } from "@/features/timeline/industrial-timeline";
 import { sampleAt } from "@/lib/scenario";
@@ -112,7 +112,7 @@ export function PrototypePage({ kind }: { kind: Kind }) {
             ? "The industrial timeline visualizes deterministic replay history and configured stage anchors. It does not perform anomaly detection or AI interpretation."
             : "This route validates the shared shell, replay state and intended information hierarchy. Later-sprint intelligence and workflows are clearly withheld."}
       </Alert>
-      {kind === "command" && <ExecutiveDashboard />}
+      {kind === "command" && <FounderReviewCommand />}
       {kind === "operations" && <Operations stage={stage} sample={sample} />}
       {kind === "asset" && <Asset stage={stage} timestamp={timestamp} sample={sample} />}
       {kind === "investigation" && <Investigation />}
