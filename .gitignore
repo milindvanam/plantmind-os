@@ -13,16 +13,31 @@
 /test-results/
 
 # local environment
-.env
-.env.local
-.env.*.local
+.env*
 !.env.example
+
+# secrets and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+credentials*.json
+secrets/
 
 # logs and generated state
 *.log
 .DS_Store
+Thumbs.db
 *.tsbuildinfo
 next-env.d.ts
+*.pid
+
+# editors and local tooling
+/.idea/
+/.vscode/
+/work/
 
 # local database volumes
 /.data/
