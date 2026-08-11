@@ -10,7 +10,7 @@ beforeEach(() => {
 });
 
 describe("application shell", () => {
-  it("renders enterprise context, fixed permissions, and exactly six primary destinations", () => {
+  it("renders enterprise context, fixed permissions, and preview plus operational destinations", () => {
     render(
       <AppShell>
         <h1>Route content</h1>
@@ -20,7 +20,8 @@ describe("application shell", () => {
     expect(screen.getAllByText("Executive Viewer").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("navigation", { name: "Primary navigation" }).querySelectorAll("a")
-    ).toHaveLength(6);
+    ).toHaveLength(9);
+    expect(screen.getByRole("link", { name: "Briefing" })).toHaveAttribute("href", "/briefing");
     expect(screen.getByRole("link", { name: "Executive Command" })).toHaveAttribute(
       "aria-current",
       "page"

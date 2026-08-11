@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   Activity,
+  BookOpenText,
   Bell,
   Building2,
   ChevronDown,
@@ -12,9 +13,11 @@ import {
   Factory,
   FileSearch,
   Gauge,
+  Layers3,
   Menu,
   PanelLeftClose,
   Sparkles,
+  Unplug,
   UserRound,
   X
 } from "lucide-react";
@@ -24,6 +27,9 @@ import { ScenarioControls } from "@/features/scenario/scenario-controls";
 import { ScenarioProvider } from "@/features/scenario/scenario-provider";
 
 const navItems = [
+  { href: "/briefing", label: "Briefing", icon: BookOpenText, permission: "Private preview" },
+  { href: "/in-action", label: "In Action", icon: Layers3, permission: "Private preview" },
+  { href: "/connect", label: "Connect", icon: Unplug, permission: "Private preview" },
   {
     href: "/command",
     label: "Executive Command",
@@ -76,7 +82,8 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="primary-nav" aria-label="Primary navigation">
       {navItems.map(({ href, label, icon: Icon, permission }) => {
-        const active = pathname === href;
+        const active =
+          pathname === href || (href !== "/command" && pathname.startsWith(`${href}/`));
         return (
           <Link
             key={href}
