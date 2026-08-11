@@ -1,6 +1,13 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { ArrowRight, CheckCircle2, Database, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  ClipboardPlus,
+  Database,
+  PackageCheck,
+  ShieldCheck
+} from "lucide-react";
 import type { SectorJourney, TruthClass } from "./vision-data";
 
 export function TruthBadge({ truth }: { truth: TruthClass }) {
@@ -151,6 +158,61 @@ export function PilotTimeline({ steps }: { steps: string[] }) {
         </li>
       ))}
     </ol>
+  );
+}
+
+export function SapMaintenanceHandoff() {
+  const handoff = [
+    { label: "Equipment mapping", value: "P-204A → FLOC-DAH-RL2-CWP-204A" },
+    { label: "Notification type", value: "M2 · Malfunction report" },
+    { label: "Proposed priority", value: "Priority 2 · High" },
+    { label: "Execution window", value: "Today · 14:00–16:00" }
+  ];
+
+  return (
+    <article className="sap-handoff">
+      <header>
+        <div>
+          <div className="vision-kicker">Enterprise maintenance handoff</div>
+          <h2>SAP S/4HANA maintenance pathway</h2>
+          <p>
+            PlantMind prepares a governed maintenance packet for review. SAP remains the
+            authoritative system for notification and work-order records.
+          </p>
+        </div>
+        <span className="connector-status planned">Planned connector</span>
+      </header>
+      <div className="sap-handoff-body">
+        <div className="sap-fields">
+          {handoff.map((item) => (
+            <div key={item.label}>
+              <span>{item.label}</span>
+              <strong>{item.value}</strong>
+            </div>
+          ))}
+        </div>
+        <div className="sap-work-scope">
+          <ClipboardPlus size={20} />
+          <div>
+            <span>Proposed work scope</span>
+            <strong>Inspect bearing and seal condition; verify alignment and lubrication.</strong>
+          </div>
+        </div>
+        <div className="sap-work-scope">
+          <PackageCheck size={20} />
+          <div>
+            <span>Material readiness</span>
+            <strong>Bearing kit and seal set shown as available for this demonstration.</strong>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <TruthBadge truth="SIMULATED CONTEXT" />
+        <span className="simulated-action">
+          <ShieldCheck size={14} /> Create SAP notification · Simulated write-back
+        </span>
+      </footer>
+    </article>
   );
 }
 

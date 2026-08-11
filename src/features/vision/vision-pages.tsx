@@ -9,6 +9,7 @@ import {
   PilotTimeline,
   ProcessFlow,
   RecommendationCard,
+  SapMaintenanceHandoff,
   TruthBadge,
   VisionHero
 } from "./vision-components";
@@ -433,6 +434,19 @@ export function PredictFailurePage() {
       <section>
         <div className="vision-section-head">
           <span>02</span>
+          <div>
+            <h2>Prepare the SAP maintenance handoff</h2>
+            <p>
+              The approved decision becomes a structured notification proposal while SAP remains the
+              maintenance system of record.
+            </p>
+          </div>
+        </div>
+        <SapMaintenanceHandoff />
+      </section>
+      <section>
+        <div className="vision-section-head">
+          <span>03</span>
           <div>
             <h2>What changes in maintenance execution</h2>
             <p>

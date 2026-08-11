@@ -40,4 +40,13 @@ test.describe("CEO Vision Preview", () => {
     await mobileDestination.click();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
+
+  test("P-204A exposes an honest simulated SAP maintenance handoff", async ({ page }) => {
+    await page.goto("/discovery/predict-equipment-failure");
+    await expect(
+      page.getByRole("heading", { name: "SAP S/4HANA maintenance pathway" })
+    ).toBeVisible();
+    await expect(page.getByText("Planned connector")).toBeVisible();
+    await expect(page.getByText(/Create SAP notification · Simulated write-back/)).toBeVisible();
+  });
 });
