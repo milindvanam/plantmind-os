@@ -17,6 +17,7 @@ Open `http://localhost:3000`.
 
 ## CEO Vision Preview routes
 
+- `/overview` — seven-chapter animated executive introduction and default public entry
 - `/briefing` — executive narrative, SCADA positioning and decision architecture
 - `/in-action` — two flagship sector journeys with explicit truth classification
 - `/in-action/power-fgd` — Power + FGD/APC journey and pilot path

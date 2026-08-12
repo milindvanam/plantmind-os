@@ -206,6 +206,8 @@ function ShellContent({ children }: { children: React.ReactNode }) {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  if (pathname === "/overview") return <>{children}</>;
   return (
     <ScenarioProvider>
       <ShellContent>{children}</ShellContent>
