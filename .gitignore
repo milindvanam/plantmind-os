@@ -39,6 +39,10 @@ next-env.d.ts
 /.vscode/
 /work/
 
+# raw public datasets (use reproducible normalized artifacts in Git)
+/data/real/*/raw/*
+!/data/real/*/raw/.gitkeep
+
 # local database volumes
 /.data/
 

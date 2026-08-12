@@ -15,6 +15,18 @@ npm.cmd run dev
 
 Open `http://localhost:3000`.
 
+## Real industrial data prototype
+
+- `/real-data` — Real Data Lab and explicit entry point for public industrial evidence
+- `/real-data/P-204A` — actual-cycle equipment-health replay, sensor evidence, recommendation and provenance
+- `/assets/P-204A` — the original deterministic simulated experience, retained separately
+
+The first adapter uses UCI's **Condition Monitoring of Hydraulic Systems** dataset: 2,205 labelled, 60-second operating cycles across 17 pressure, flow, power, temperature, vibration and efficiency channels. The committed normalized artifact preserves per-cycle statistics and source labels. Raw source files are intentionally ignored; exact setup and regeneration instructions are in [data/real/hydraulic-system/README.md](data/real/hydraulic-system/README.md).
+
+Run `npm run data:hydraulic` after placing the official source files in `data/real/hydraulic-system/raw/` to reproduce the normalized artifact.
+
+Truth boundary: telemetry and pump-condition labels on the real-data routes come from the public UCI dataset. P-204A, the fictional company, Maharashtra site and all business context are simulated PlantMind demonstration context. PlantMind's health interpretation and maintenance recommendation are deterministic prototype outputs, not certified engineering diagnoses.
+
 ## CEO Vision Preview routes
 
 - `/overview` — seven-chapter animated executive introduction and default public entry

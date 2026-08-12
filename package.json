@@ -23,6 +23,7 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:check": "tsx scripts/check-seed.ts",
+    "data:hydraulic": "node scripts/ingest-uci-hydraulic.ts",
     "quality": "npm run format && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {

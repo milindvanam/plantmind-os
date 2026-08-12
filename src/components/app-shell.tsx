@@ -10,6 +10,7 @@ import {
   Building2,
   ChevronDown,
   ClipboardCheck,
+  Database,
   Factory,
   FileSearch,
   Gauge,
@@ -21,7 +22,7 @@ import {
   UserRound,
   X
 } from "lucide-react";
-import { IconButton, SimulatedDataLabel } from "@/components/ui";
+import { Badge, IconButton, SimulatedDataLabel } from "@/components/ui";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ScenarioControls } from "@/features/scenario/scenario-controls";
 import { ScenarioProvider } from "@/features/scenario/scenario-provider";
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/briefing", label: "Briefing", icon: BookOpenText, permission: "Private preview" },
   { href: "/in-action", label: "In Action", icon: Layers3, permission: "Private preview" },
   { href: "/connect", label: "Connect", icon: Unplug, permission: "Private preview" },
+  { href: "/real-data", label: "Real Data Lab", icon: Database, permission: "All demo roles" },
   {
     href: "/command",
     label: "Executive Command",
@@ -103,6 +105,8 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function ShellContent({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const realDataMode = pathname.startsWith("/real-data");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scenarioOpen, setScenarioOpen] = useState(false);
   return (
@@ -123,9 +127,11 @@ function ShellContent({ children }: { children: React.ReactNode }) {
         </div>
         <div className="context-block">
           <span className="eyebrow">Enterprise</span>
-          <strong>Aranya Process Industries</strong>
+          <strong>
+            {realDataMode ? "PlantMind Process Industries" : "Aranya Process Industries"}
+          </strong>
           <span>
-            <Building2 size={14} /> Western Region
+            <Building2 size={14} /> {realDataMode ? "Maharashtra demo context" : "Western Region"}
           </span>
         </div>
         <Navigation onNavigate={() => setMobileOpen(false)} />
@@ -137,7 +143,14 @@ function ShellContent({ children }: { children: React.ReactNode }) {
               <small>Fixed demo permissions</small>
             </span>
           </div>
-          <SimulatedDataLabel />
+          {realDataMode ? (
+            <Badge tone="real">
+              <Database size={13} />
+              Real industrial data
+            </Badge>
+          ) : (
+            <SimulatedDataLabel />
+          )}
         </div>
       </aside>
       {mobileOpen && (
@@ -161,20 +174,31 @@ function ShellContent({ children }: { children: React.ReactNode }) {
               <Factory size={16} />
               <span>
                 <small>Operating site</small>
-                <strong>Dahej Plant · Reactor Line 2</strong>
+                <strong>
+                  {realDataMode
+                    ? "Maharashtra Demo Site · Hydraulic Rig"
+                    : "Dahej Plant · Reactor Line 2"}
+                </strong>
               </span>
               <ChevronDown size={15} />
             </div>
           </div>
           <div className="topbar-actions">
-            <button
-              className="scenario-trigger"
-              onClick={() => setScenarioOpen((value) => !value)}
-              aria-expanded={scenarioOpen}
-            >
-              <ScenarioControls compact />
-              <PanelLeftClose size={16} />
-            </button>
+            {realDataMode ? (
+              <Badge tone="real">
+                <Database size={13} />
+                REAL INDUSTRIAL DATA
+              </Badge>
+            ) : (
+              <button
+                className="scenario-trigger"
+                onClick={() => setScenarioOpen((value) => !value)}
+                aria-expanded={scenarioOpen}
+              >
+                <ScenarioControls compact />
+                <PanelLeftClose size={16} />
+              </button>
+            )}
             <ThemeSwitcher />
             <IconButton label="Notifications">
               <Bell size={17} />
@@ -192,7 +216,7 @@ function ShellContent({ children }: { children: React.ReactNode }) {
             </button>
           </div>
         </header>
-        {scenarioOpen && (
+        {!realDataMode && scenarioOpen && (
           <div className="scenario-drawer">
             <ScenarioControls />
           </div>
