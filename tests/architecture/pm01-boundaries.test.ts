@@ -26,13 +26,22 @@ describe("PM-01 architectural boundaries", () => {
       expect(observable).not.toContain(forbidden);
   });
 
+  it("keeps the material-flow model independent of ground truth and PlantMind", () => {
+    const source = read("src/features/pm01/plant-reality/process-model.ts");
+    expect(source).not.toContain("ground-truth");
+    expect(source).not.toContain("Pm01GroundTruth");
+    expect(source).not.toContain("plantmind/");
+  });
+
   it("does not couple PM-01 to the legacy P-204A scenario engine", () => {
     const files = [
       "src/features/pm01/plant-reality/asset-registry.ts",
       "src/features/pm01/plant-reality/tag-registry.ts",
       "src/features/pm01/plant-reality/deterministic-rng.ts",
       "src/features/pm01/plant-reality/simulation-clock.ts",
-      "src/features/pm01/plant-reality/run-lifecycle.ts"
+      "src/features/pm01/plant-reality/run-lifecycle.ts",
+      "src/features/pm01/plant-reality/material-vector.ts",
+      "src/features/pm01/plant-reality/process-model.ts"
     ];
     for (const file of files) {
       const source = read(file);
@@ -46,7 +55,9 @@ describe("PM-01 architectural boundaries", () => {
     const files = [
       "src/features/pm01/plant-reality/deterministic-rng.ts",
       "src/features/pm01/plant-reality/simulation-clock.ts",
-      "src/features/pm01/plant-reality/run-lifecycle.ts"
+      "src/features/pm01/plant-reality/run-lifecycle.ts",
+      "src/features/pm01/plant-reality/material-vector.ts",
+      "src/features/pm01/plant-reality/process-model.ts"
     ];
     for (const file of files) {
       const source = read(file);
