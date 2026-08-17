@@ -33,6 +33,21 @@ describe("PM-01 architectural boundaries", () => {
     expect(source).not.toContain("plantmind/");
   });
 
+  it("keeps production, batch and energy models isolated from hidden ground truth", () => {
+    for (const file of [
+      "src/features/pm01/contracts/production.ts",
+      "src/features/pm01/contracts/energy.ts",
+      "src/features/pm01/plant-reality/production-model.ts",
+      "src/features/pm01/plant-reality/energy-model.ts",
+      "src/features/pm01/plant-reality/factory-model.ts"
+    ]) {
+      const source = read(file);
+      expect(source).not.toContain("ground-truth");
+      expect(source).not.toContain("Pm01GroundTruth");
+      expect(source).not.toContain("hx301FoulingIndex");
+    }
+  });
+
   it("does not couple PM-01 to the legacy P-204A scenario engine", () => {
     const files = [
       "src/features/pm01/plant-reality/asset-registry.ts",
@@ -41,7 +56,10 @@ describe("PM-01 architectural boundaries", () => {
       "src/features/pm01/plant-reality/simulation-clock.ts",
       "src/features/pm01/plant-reality/run-lifecycle.ts",
       "src/features/pm01/plant-reality/material-vector.ts",
-      "src/features/pm01/plant-reality/process-model.ts"
+      "src/features/pm01/plant-reality/process-model.ts",
+      "src/features/pm01/plant-reality/production-model.ts",
+      "src/features/pm01/plant-reality/energy-model.ts",
+      "src/features/pm01/plant-reality/factory-model.ts"
     ];
     for (const file of files) {
       const source = read(file);
@@ -57,7 +75,10 @@ describe("PM-01 architectural boundaries", () => {
       "src/features/pm01/plant-reality/simulation-clock.ts",
       "src/features/pm01/plant-reality/run-lifecycle.ts",
       "src/features/pm01/plant-reality/material-vector.ts",
-      "src/features/pm01/plant-reality/process-model.ts"
+      "src/features/pm01/plant-reality/process-model.ts",
+      "src/features/pm01/plant-reality/production-model.ts",
+      "src/features/pm01/plant-reality/energy-model.ts",
+      "src/features/pm01/plant-reality/factory-model.ts"
     ];
     for (const file of files) {
       const source = read(file);

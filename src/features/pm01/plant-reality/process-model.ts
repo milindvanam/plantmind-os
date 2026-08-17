@@ -16,6 +16,7 @@ import {
 
 const SECONDS_PER_DAY = 86_400;
 const NOMINAL_PRODUCT_RATE_TONNES_PER_SECOND = 100 / SECONDS_PER_DAY;
+export const PM01_PACKAGING_CAPACITY_TONNES_PER_HOUR = 5;
 
 /** Recipe basis per nominal tonne of ASC-100 before defined process recovery losses. */
 export const PM01_ASC100_RECIPE = materialVector({
@@ -134,6 +135,7 @@ function transferRecipeToFeed(state: Pm01ProcessState, recipeUnits: number) {
   );
   return {
     tonnes: totalMaterialTonnes(moved),
+    material: moved,
     state: {
       ...state,
       stages: {
@@ -293,10 +295,14 @@ export function createInitialProcessState(): Pm01ProcessState {
       processLossTonnes: 0
     },
     lastTick: {
+      feedPreparedMaterial: materialVector(),
       feedPreparedTonnes: 0,
       reactorProductTonnes: 0,
+      reactionLossTonnes: 0,
       separatedTonnes: 0,
+      separationLossTonnes: 0,
       finishedTonnes: 0,
+      finishingLossTonnes: 0,
       packagedTonnes: 0,
       dispatchedTonnes: 0,
       processLossTonnes: 0
@@ -347,8 +353,10 @@ export function advanceProcessState(
     next,
     "packaging",
     "finished-goods-storage",
-    Math.min(nominalProduct * 1.2, (5 / 3600) * elapsedSeconds) *
-      constraints.packagingCapacityFactor
+    Math.min(
+      nominalProduct * 1.2,
+      (PM01_PACKAGING_CAPACITY_TONNES_PER_HOUR / 3600) * elapsedSeconds
+    ) * constraints.packagingCapacityFactor
   );
   next = packaged.state;
   const toPackaging = transferAsc100(
@@ -370,7 +378,7 @@ export function advanceProcessState(
     next,
     "finishing",
     "intermediate-storage",
-    nominalProduct * 1.08 * constraints.finishingCapacityFactor,
+    nominalProduct * constraints.finishingCapacityFactor,
     PM01_PROCESS_RECOVERY.finishing
   );
   next = finished.state;
@@ -378,7 +386,7 @@ export function advanceProcessState(
     next,
     "separation",
     "finishing",
-    nominalProduct * 1.1 * constraints.separationCapacityFactor,
+    nominalProduct * constraints.separationCapacityFactor,
     PM01_PROCESS_RECOVERY.separation
   );
   next = separated.state;
@@ -406,10 +414,14 @@ export function advanceProcessState(
       processLossTonnes: next.ledger.processLossTonnes + tickLoss
     },
     lastTick: {
+      feedPreparedMaterial: feed.material,
       feedPreparedTonnes: feed.tonnes,
       reactorProductTonnes: reacted.productTonnes,
+      reactionLossTonnes: reacted.lossTonnes,
       separatedTonnes: separated.outputTonnes,
+      separationLossTonnes: separated.lossTonnes,
       finishedTonnes: finished.outputTonnes,
+      finishingLossTonnes: finished.lossTonnes,
       packagedTonnes: packaged.tonnes,
       dispatchedTonnes: dispatchTonnes,
       processLossTonnes: tickLoss

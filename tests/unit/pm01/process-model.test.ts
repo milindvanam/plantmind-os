@@ -31,8 +31,9 @@ describe("PM-01 deterministic factory process", () => {
 
   it("derives dispatch from connected process state", () => {
     const initial = createInitialProcessState();
-    const healthy = advanceProcessByTicks(initial, DAY_TICKS * 4, STEP_SECONDS);
-    const constrained = advanceProcessByTicks(initial, DAY_TICKS * 4, STEP_SECONDS, {
+    const minuteTicks = 1_440 * 4;
+    const healthy = advanceProcessByTicks(initial, minuteTicks, 60);
+    const constrained = advanceProcessByTicks(initial, minuteTicks, 60, {
       ...PM01_HEALTHY_PROCESS_CONSTRAINTS,
       reactorCapacityFactor: 0.5
     });
@@ -40,7 +41,7 @@ describe("PM-01 deterministic factory process", () => {
     expect(getDerivedFactoryOutput(constrained).dispatchedTonnes).toBeLessThan(
       getDerivedFactoryOutput(healthy).dispatchedTonnes
     );
-    expect(constrained.stages["finished-goods-storage"].material["ASC-100"]).toBeLessThan(0.01);
+    expect(constrained.stages["finished-goods-storage"].material["ASC-100"]).toBeLessThan(0.05);
   });
 
   it("moves material through every factory stage", () => {

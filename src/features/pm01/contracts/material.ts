@@ -43,10 +43,14 @@ export type Pm01ProcessState = Readonly<{
   stages: Readonly<Record<Pm01ProcessStageId, Pm01StageInventory>>;
   ledger: Pm01MaterialLedger;
   lastTick: Readonly<{
+    feedPreparedMaterial: Pm01MaterialVector;
     feedPreparedTonnes: number;
     reactorProductTonnes: number;
+    reactionLossTonnes: number;
     separatedTonnes: number;
+    separationLossTonnes: number;
     finishedTonnes: number;
+    finishingLossTonnes: number;
     packagedTonnes: number;
     dispatchedTonnes: number;
     processLossTonnes: number;
