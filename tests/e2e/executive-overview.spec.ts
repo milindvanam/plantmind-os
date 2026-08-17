@@ -24,6 +24,10 @@ test.describe("executive overview", () => {
   test("overview supports keyboard navigation and a mobile viewport", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/overview");
+    await page.getByRole("button", { name: "Next chapter" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("intelligence layer");
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("critical decisions");
     await page.keyboard.press("ArrowRight");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("intelligence layer");
     await expect(page.getByRole("button", { name: "Previous chapter" })).toBeEnabled();

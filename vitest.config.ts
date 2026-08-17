@@ -8,6 +8,7 @@ export default defineConfig({
     include: [
       "tests/unit/**/*.test.ts",
       "tests/unit/**/*.test.tsx",
+      "tests/architecture/**/*.test.ts",
       "tests/integration/**/*.test.ts"
     ],
     coverage: { reporter: ["text", "html"] }
