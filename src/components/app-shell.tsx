@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
@@ -32,6 +33,7 @@ const navItems = [
   { href: "/in-action", label: "In Action", icon: Layers3, permission: "Private preview" },
   { href: "/connect", label: "Connect", icon: Unplug, permission: "Private preview" },
   { href: "/real-data", label: "Real Data Lab", icon: Database, permission: "All demo roles" },
+  { href: "/virtual-plant", label: "Virtual Plant", icon: Factory, permission: "All demo roles" },
   {
     href: "/command",
     label: "Executive Command",
@@ -89,7 +91,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
         return (
           <Link
             key={href}
-            href={href}
+            href={href as Route}
             className={active ? "nav-item active" : "nav-item"}
             aria-current={active ? "page" : undefined}
             onClick={onNavigate}
@@ -107,6 +109,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 function ShellContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const realDataMode = pathname.startsWith("/real-data");
+  const virtualPlantMode = pathname.startsWith("/virtual-plant");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scenarioOpen, setScenarioOpen] = useState(false);
   return (
@@ -128,10 +131,19 @@ function ShellContent({ children }: { children: React.ReactNode }) {
         <div className="context-block">
           <span className="eyebrow">Enterprise</span>
           <strong>
-            {realDataMode ? "PlantMind Process Industries" : "Aranya Process Industries"}
+            {realDataMode
+              ? "PlantMind Process Industries"
+              : virtualPlantMode
+                ? "Apex Specialty Chemicals Ltd."
+                : "Aranya Process Industries"}
           </strong>
           <span>
-            <Building2 size={14} /> {realDataMode ? "Maharashtra demo context" : "Western Region"}
+            <Building2 size={14} />{" "}
+            {realDataMode
+              ? "Maharashtra demo context"
+              : virtualPlantMode
+                ? "PM-01 simulation environment"
+                : "Western Region"}
           </span>
         </div>
         <Navigation onNavigate={() => setMobileOpen(false)} />
@@ -177,7 +189,9 @@ function ShellContent({ children }: { children: React.ReactNode }) {
                 <strong>
                   {realDataMode
                     ? "Maharashtra Demo Site · Hydraulic Rig"
-                    : "Dahej Plant · Reactor Line 2"}
+                    : virtualPlantMode
+                      ? "PM-01 Manufacturing Plant · ASC-100"
+                      : "Dahej Plant · Reactor Line 2"}
                 </strong>
               </span>
               <ChevronDown size={15} />
@@ -188,6 +202,10 @@ function ShellContent({ children }: { children: React.ReactNode }) {
               <Badge tone="real">
                 <Database size={13} />
                 REAL INDUSTRIAL DATA
+              </Badge>
+            ) : virtualPlantMode ? (
+              <Badge tone="simulated">
+                <Activity size={13} /> PM-01 SIMULATION
               </Badge>
             ) : (
               <button

@@ -48,6 +48,19 @@ describe("PM-01 architectural boundaries", () => {
     }
   });
 
+  it("keeps visualization UI behind application and observable boundaries", () => {
+    const ui = read("src/features/pm01/ui/virtual-factory.tsx");
+    expect(ui).not.toContain("plant-reality");
+    expect(ui).not.toContain("ground-truth");
+    const projection = read("src/features/pm01/observable/factory-projection.ts");
+    const controller = read("src/features/pm01/application/use-factory-simulation.ts");
+    for (const source of [projection, controller]) {
+      expect(source).not.toContain("ground-truth");
+      expect(source).not.toContain("Pm01GroundTruth");
+      expect(source).not.toContain("hx301FoulingIndex");
+    }
+  });
+
   it("does not couple PM-01 to the legacy P-204A scenario engine", () => {
     const files = [
       "src/features/pm01/plant-reality/asset-registry.ts",

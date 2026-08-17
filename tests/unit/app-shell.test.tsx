@@ -20,11 +20,15 @@ describe("application shell", () => {
     expect(screen.getAllByText("Executive Viewer").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("navigation", { name: "Primary navigation" }).querySelectorAll("a")
-    ).toHaveLength(10);
+    ).toHaveLength(11);
     expect(screen.getByRole("link", { name: "Briefing" })).toHaveAttribute("href", "/briefing");
     expect(screen.getByRole("link", { name: "Real Data Lab" })).toHaveAttribute(
       "href",
       "/real-data"
+    );
+    expect(screen.getByRole("link", { name: "Virtual Plant" })).toHaveAttribute(
+      "href",
+      "/virtual-plant"
     );
     expect(screen.getByRole("link", { name: "Executive Command" })).toHaveAttribute(
       "aria-current",
