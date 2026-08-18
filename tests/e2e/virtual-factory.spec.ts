@@ -45,6 +45,23 @@ test("PM-01 3D twin binds assets to observable telemetry and replay", async ({ p
   await expect(page.getByText(/Simulator ground truth is not available/)).toBeVisible();
 });
 
+test("PM-01 photorealistic twin tours the material journey with equipment context", async ({ page }) => {
+  await page.goto("/virtual-plant");
+  await page.getByRole("combobox", { name: "Choose plant view" }).selectOption("machinery");
+  const tour = page.getByRole("region", { name: /Chemical Industry guided operational imagery tour/ });
+  await expect(tour).toContainText("Photorealistic operational twin");
+  await expect(tour.getByRole("navigation", { name: "Plant tour route" })).toContainText(
+    "Loading & unloading dock"
+  );
+  await tour.getByRole("button", { name: "Go to Production process" }).click();
+  await expect(tour.getByRole("heading", { name: "Production process" })).toBeVisible();
+  await expect(tour.getByRole("complementary", { name: "Equipment telemetry at current tour stop" })).toContainText("R-301");
+  await tour.getByRole("button", { name: /Walk forward to Final output/ }).click();
+  await expect(tour.getByRole("heading", { name: "Final output & QC" })).toBeVisible();
+  await tour.getByRole("button", { name: "Take a Tour" }).click();
+  await expect(tour.getByRole("button", { name: "Pause tour" })).toHaveAttribute("aria-pressed", "true");
+});
+
 test("PM-01 topology remains usable on a compact presentation viewport", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
   await page.goto("/virtual-plant");
