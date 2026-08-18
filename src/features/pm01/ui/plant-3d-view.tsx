@@ -4,12 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { Box, Minus, Plus, RotateCcw, RotateCw, ScanLine } from "lucide-react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import type { Pm01FactoryView } from "../contracts/visualization";
 
 type Plant3dViewProps = {
   industry: string;
   section: string;
   equipment: readonly string[];
   metrics: readonly (readonly [string, string])[];
+  observableView: Pm01FactoryView | null;
+  observableHistory: readonly Pm01FactoryView[];
+  onAsset: (assetId: string) => void;
 };
 
 type SceneRuntime = {
@@ -19,11 +23,56 @@ type SceneRuntime = {
   reset: () => void;
 };
 
-export function Plant3dView({ industry, section, equipment, metrics }: Plant3dViewProps) {
+type LiveSceneObject = {
+  unit: THREE.Group;
+  beacon: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>;
+};
+
+const PROCESS_NODE_MATCHERS: readonly (readonly [RegExp, string])[] = [
+  [/tank|raw|receiv/i, "tank-farm"],
+  [/feed/i, "feed"],
+  [/react/i, "reaction"],
+  [/separ/i, "separation"],
+  [/finish|dry/i, "finishing"],
+  [/pack|fill/i, "packaging"],
+  [/warehouse|cold|finished/i, "finished-goods"],
+  [/dispatch|loading/i, "dispatch"]
+];
+
+function nodeForEquipment(view: Pm01FactoryView | null, equipment: string) {
+  if (!view) return null;
+  const id = PROCESS_NODE_MATCHERS.find(([matcher]) => matcher.test(equipment))?.[1];
+  return view.processNodes.find((node) => node.id === id) ?? null;
+}
+
+function displayNumber(value: number, digits = 1) {
+  return new Intl.NumberFormat("en-IN", { maximumFractionDigits: digits }).format(value);
+}
+
+export function Plant3dView({
+  industry,
+  section,
+  equipment,
+  metrics,
+  observableView,
+  observableHistory,
+  onAsset
+}: Plant3dViewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const runtimeRef = useRef<SceneRuntime | null>(null);
+  const liveObjectsRef = useRef<LiveSceneObject[]>([]);
   const [walkMode, setWalkMode] = useState(false);
   const [selected, setSelected] = useState(0);
+  const [replayIndex, setReplayIndex] = useState<number | null>(null);
+  const displayedView =
+    replayIndex === null
+      ? observableView
+      : (observableHistory[Math.min(replayIndex, observableHistory.length - 1)] ?? observableView);
+  const connected = observableView !== null;
+  const selectedNode = nodeForEquipment(displayedView, equipment[selected] ?? "");
+  const selectedAsset = displayedView?.assets.find((asset) =>
+    selectedNode?.assetIds.includes(asset.id)
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -146,6 +195,7 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
     const positions = equipment.map((_, index) =>
       layouts[industryKey]![index] ?? { x: (index % 4) * 5 - 7.5, z: Math.floor(index / 4) * 7 - 3.5 }
     );
+    const liveObjects: LiveSceneObject[] = [];
 
     const addBox = (
       unit: THREE.Group,
@@ -315,7 +365,9 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
       beacon.position.set(0, height + 0.25, 0);
       unit.add(beacon);
       plant.add(unit);
+      liveObjects.push({ unit, beacon });
     });
+    liveObjectsRef.current = liveObjects;
 
     for (let index = 0; index < positions.length - 1; index += 1) {
       const current = positions[index]!;
@@ -323,9 +375,13 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
       const from = new THREE.Vector3(current.x, 1.1 + (index % 2), current.z);
       const to = new THREE.Vector3(next.x, 1.1 + (index % 2), next.z);
       const delta = to.clone().sub(from);
-      const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, delta.length(), 12), accent);
+      const pipe = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.1, 0.1, delta.length(), 12),
+        accent.clone()
+      );
       pipe.position.copy(from.clone().add(to).multiplyScalar(0.5));
       pipe.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), delta.clone().normalize());
+      pipe.userData.flowIndex = index;
       plant.add(pipe);
     }
 
@@ -350,6 +406,13 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
       frame = requestAnimationFrame(animate);
       plant.traverse((object) => {
         if (object.userData.animated) object.rotation.x += 0.012;
+        if (typeof object.userData.flowIndex === "number") {
+          const source = liveObjects[object.userData.flowIndex];
+          const material = (object as THREE.Mesh).material as THREE.MeshStandardMaterial;
+          if (source?.unit.userData.flowActive) {
+            material.emissiveIntensity = 0.75 + Math.sin(Date.now() / 180) * 0.2;
+          }
+        }
       });
       controls.update();
       renderer.render(scene, camera);
@@ -368,8 +431,30 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
         }
       });
       runtimeRef.current = null;
+      liveObjectsRef.current = [];
     };
   }, [equipment, industry, section]);
+
+  useEffect(() => {
+    liveObjectsRef.current.forEach(({ unit, beacon }, index) => {
+      const node = nodeForEquipment(displayedView, equipment[index] ?? "");
+      const status = node?.status ?? (connected ? "OFFLINE" : "NORMAL");
+      const color =
+        status === "CRITICAL"
+          ? 0xff5a5f
+          : status === "WARNING"
+            ? 0xf4b942
+            : status === "OFFLINE"
+              ? 0x60736c
+              : 0x54ddb0;
+      beacon.material.color.setHex(color);
+      beacon.material.emissive.setHex(color);
+      beacon.material.emissiveIntensity = node?.active ? 1.6 : 0.35;
+      beacon.scale.setScalar(node?.active ? 1.55 : 1);
+      unit.userData.flowActive = Boolean(node?.active);
+      unit.scale.setScalar(index === selected ? 1.05 : 1);
+    });
+  }, [connected, displayedView, equipment, selected]);
 
   const zoom = (factor: number) => {
     const runtime = runtimeRef.current;
@@ -402,9 +487,13 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
     <section className="pm-3d-view" aria-label={`${industry} ${section} interactive 3D plant`}>
       <canvas ref={canvasRef} aria-label="Interactive 3D plant model" />
       <header>
-        <span>3D DIGITAL TWIN · {section}</span>
+        <span>{connected ? "CONNECTED OPERATIONAL TWIN" : "3D INDUSTRY MODEL"} · {section}</span>
         <h2>{industry}</h2>
-        <p>Drag to orbit · scroll to zoom · right-drag to pan</p>
+        <p>
+          {connected
+            ? `${displayedView?.run.status ?? "OFFLINE"} · observable telemetry · ${replayIndex === null ? "LIVE" : "HISTORICAL REPLAY"}`
+            : "Illustrative geometry · deterministic industry model pending"}
+        </p>
       </header>
       <div className="pm-3d-controls" aria-label="3D camera controls">
         <button onClick={() => zoom(0.78)} aria-label="Zoom 3D model in">
@@ -431,18 +520,41 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
           <button
             key={item}
             className={selected === index ? "active" : ""}
-            onClick={() => setSelected(index)}
+            onClick={() => {
+              setSelected(index);
+              const node = nodeForEquipment(displayedView, item);
+              const assetId = node?.assetIds[0];
+              if (assetId) onAsset(assetId);
+            }}
           >
             <i>{String(index + 1).padStart(2, "0")}</i>
             <span>
               {item}
-              <small>{selected === index ? "Selected · live" : "Normal"}</small>
+              <small>
+                {connected
+                  ? `${nodeForEquipment(displayedView, item)?.status ?? "Offline"} · ${nodeForEquipment(displayedView, item)?.throughputTonnesPerHour.toFixed(2) ?? "0.00"} T/h`
+                  : selected === index
+                    ? "Selected · illustrative"
+                    : "Illustrative"}
+              </small>
             </span>
           </button>
         ))}
       </div>
       <div className="pm-3d-metrics" aria-label="Section operating statistics">
-        {metrics.map(([label, value], index) => (
+        {(connected && displayedView
+          ? [
+              ["Production rate", `${displayNumber(displayedView.kpis.productionRateTonnesPerDay)} T/day`],
+              ["OEE", `${displayNumber(displayedView.kpis.oee.oee * 100)}%`],
+              [
+                "Energy intensity",
+                displayedView.kpis.energyPerTonne === null
+                  ? "—"
+                  : `${displayNumber(displayedView.kpis.energyPerTonne)} kWh-eq/T`
+              ]
+            ]
+          : metrics
+        ).map(([label, value], index) => (
           <article key={label}>
             <span>{label}</span>
             <strong>{value}</strong>
@@ -450,6 +562,73 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
           </article>
         ))}
       </div>
+      {connected && selectedNode && (
+        <aside className="pm-twin-asset-panel" aria-label="Selected asset live telemetry">
+          <header>
+            <span>SELECTED ASSET · {selectedNode.status}</span>
+            <strong>{selectedAsset ? `${selectedAsset.id} · ${selectedAsset.name}` : selectedNode.title}</strong>
+            <small>
+              {displayNumber(selectedNode.inventoryTonnes)} T held · {displayNumber(selectedNode.throughputTonnesPerHour, 2)} T/h
+            </small>
+          </header>
+          <div className="pm-twin-tags">
+            {(selectedAsset?.tags.slice(0, 3) ?? []).map((tag) => {
+              const samples = observableHistory
+                .map((snapshot) =>
+                  snapshot.assets
+                    .find((asset) => asset.id === selectedAsset?.id)
+                    ?.tags.find((candidate) => candidate.id === tag.id)?.value
+                )
+                .filter((value): value is number => typeof value === "number")
+                .slice(-18);
+              const maximum = Math.max(...samples, 1);
+              return (
+                <div key={tag.id}>
+                  <span>{tag.name}</span>
+                  <strong>
+                    {typeof tag.value === "number" ? displayNumber(tag.value, 2) : String(tag.value)}{" "}
+                    <small>{tag.engineeringUnit}</small>
+                  </strong>
+                  <i aria-label={`${tag.name} recent observable trend`}>
+                    {samples.map((sample, index) => (
+                      <b key={index} style={{ height: `${Math.max(8, (sample / maximum) * 100)}%` }} />
+                    ))}
+                  </i>
+                </div>
+              );
+            })}
+            {selectedAsset?.tags.length === 0 && <p>No configured observable tags.</p>}
+          </div>
+          <button onClick={() => selectedAsset && onAsset(selectedAsset.id)} disabled={!selectedAsset}>
+            Open asset record
+          </button>
+        </aside>
+      )}
+      {connected && observableHistory.length > 0 && (
+        <div className="pm-twin-replay" aria-label="Observable history replay">
+          <button
+            className={replayIndex === null ? "active" : ""}
+            onClick={() => setReplayIndex(null)}
+          >
+            Live
+          </button>
+          <span>{replayIndex === null ? "LIVE" : "REPLAY"}</span>
+          <input
+            aria-label="Replay observable history"
+            type="range"
+            min={0}
+            max={Math.max(0, observableHistory.length - 1)}
+            value={replayIndex ?? observableHistory.length - 1}
+            onChange={(event) => setReplayIndex(Number(event.target.value))}
+          />
+          <time>{displayedView ? new Date(displayedView.run.timestamp).toLocaleTimeString("en-IN") : "—"}</time>
+        </div>
+      )}
+      <p className="pm-twin-boundary">
+        {connected
+          ? "Observable operating data only · simulation ground truth is isolated from this twin."
+          : "Illustrative 3D view · not connected to live or simulated plant telemetry."}
+      </p>
     </section>
   );
 }

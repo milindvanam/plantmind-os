@@ -31,6 +31,20 @@ test("PM-01 asset drill-down exposes observable tags only", async ({ page }) => 
   await expect(page.getByText(/fouling index/i)).toHaveCount(0);
 });
 
+test("PM-01 3D twin binds assets to observable telemetry and replay", async ({ page }) => {
+  await page.goto("/virtual-plant");
+  await page.getByRole("combobox", { name: "Choose plant view" }).selectOption("model3d");
+  const twin = page.getByRole("region", { name: /Chemical Industry.*interactive 3D/ });
+  await expect(twin).toContainText("CONNECTED OPERATIONAL TWIN");
+  await expect(twin.getByLabel("Observable history replay")).toBeVisible();
+  await page.getByRole("button", { name: "1000×" }).click();
+  await page.getByRole("button", { name: /Play/ }).click();
+  await expect(twin.getByText(/T\/h/).first()).toBeVisible();
+  await twin.getByRole("button", { name: /Reactor/ }).click();
+  await expect(page.getByRole("dialog", { name: /R-301/ })).toBeVisible();
+  await expect(page.getByText(/Simulator ground truth is not available/)).toBeVisible();
+});
+
 test("PM-01 topology remains usable on a compact presentation viewport", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
   await page.goto("/virtual-plant");

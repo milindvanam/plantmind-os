@@ -1242,6 +1242,9 @@ export function VirtualFactory() {
             section={SCOPE_LABELS[scope]}
             equipment={activeEquipment}
             metrics={SCOPE_METRICS[activeProfile.id][scope]}
+            observableView={sectorId === "chemical" ? simulation.view : null}
+            observableHistory={sectorId === "chemical" ? simulation.observableHistory : []}
+            onAsset={setSelectedAssetId}
           />
         ) : viewMode === "machinery" ? (
           <MachineryView

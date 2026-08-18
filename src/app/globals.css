@@ -3635,6 +3635,127 @@ td {
   height: 2px;
   background: var(--accent);
 }
+.pm-twin-asset-panel {
+  position: absolute;
+  z-index: 5;
+  right: 16px;
+  top: 315px;
+  width: 260px;
+  padding: 11px;
+  border: 1px solid rgba(117, 224, 179, 0.28);
+  border-radius: 9px;
+  background: rgba(5, 16, 12, 0.88);
+  backdrop-filter: blur(12px);
+}
+.pm-twin-asset-panel > header {
+  display: grid;
+  gap: 2px;
+}
+.pm-twin-asset-panel > header span {
+  color: var(--accent);
+  font: 7px var(--font-mono);
+  letter-spacing: 0.08em;
+}
+.pm-twin-asset-panel > header strong {
+  font-size: 10px;
+}
+.pm-twin-asset-panel > header small {
+  color: #8ba198;
+  font-size: 7px;
+}
+.pm-twin-tags {
+  margin: 9px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+.pm-twin-tags > div {
+  min-width: 0;
+  padding: 6px;
+  display: grid;
+  gap: 3px;
+  border: 1px solid rgba(117, 224, 179, 0.14);
+  border-radius: 5px;
+  background: rgba(18, 46, 37, 0.66);
+}
+.pm-twin-tags span {
+  overflow: hidden;
+  color: #8ba198;
+  font-size: 6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-twin-tags strong {
+  font: 10px var(--font-mono);
+}
+.pm-twin-tags strong small {
+  color: #779187;
+  font-size: 5px;
+}
+.pm-twin-tags i {
+  height: 18px;
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+}
+.pm-twin-tags i b {
+  min-width: 2px;
+  flex: 1;
+  border-radius: 1px 1px 0 0;
+  background: var(--accent);
+  opacity: 0.72;
+}
+.pm-twin-asset-panel > button,
+.pm-twin-replay button {
+  min-height: 26px;
+  padding: 0 9px;
+  border: 1px solid rgba(117, 224, 179, 0.3);
+  border-radius: 5px;
+  color: #dff8ee;
+  background: #0b211a;
+  font-size: 7px;
+  cursor: pointer;
+}
+.pm-twin-replay {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 16px;
+  width: min(430px, 44vw);
+  min-height: 38px;
+  padding: 5px 8px;
+  display: grid;
+  grid-template-columns: auto auto minmax(100px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(117, 224, 179, 0.28);
+  border-radius: 8px;
+  background: rgba(5, 16, 12, 0.88);
+  backdrop-filter: blur(10px);
+  transform: translateX(-50%);
+}
+.pm-twin-replay button.active {
+  color: #052017;
+  background: var(--accent);
+}
+.pm-twin-replay span,
+.pm-twin-replay time {
+  color: #91aaa0;
+  font: 7px var(--font-mono);
+}
+.pm-twin-replay input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+.pm-twin-boundary {
+  position: absolute;
+  z-index: 4;
+  left: 16px;
+  bottom: 13px;
+  margin: 0;
+  color: #607970;
+  font-size: 6px;
+}
 .pm-visual-stage {
   position: relative;
 }

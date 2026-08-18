@@ -50,8 +50,12 @@ describe("PM-01 architectural boundaries", () => {
 
   it("keeps visualization UI behind application and observable boundaries", () => {
     const ui = read("src/features/pm01/ui/virtual-factory.tsx");
+    const twin = read("src/features/pm01/ui/plant-3d-view.tsx");
     expect(ui).not.toContain("plant-reality");
     expect(ui).not.toContain("ground-truth");
+    expect(twin).not.toContain("plant-reality");
+    expect(twin).not.toContain("ground-truth");
+    expect(twin).toContain("Pm01FactoryView");
     const projection = read("src/features/pm01/observable/factory-projection.ts");
     const controller = read("src/features/pm01/application/use-factory-simulation.ts");
     for (const source of [projection, controller]) {
