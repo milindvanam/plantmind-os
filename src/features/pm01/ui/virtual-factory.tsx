@@ -1133,79 +1133,83 @@ export function VirtualFactory() {
   return (
     <div className="pm-factory-page">
       <header className="pm-factory-header">
-        <div>
+        <div className="pm-factory-meta-row">
           <div className="pm-title-line">
             <span className="pm-live-mark">
               <Factory size={15} /> PM-01
             </span>
             <span>Apex Specialty Chemicals Ltd.</span>
           </div>
-          <h1>Virtual Factory</h1>
-          <p>Five industry landscapes · animated process maps · realistic machinery views</p>
+          <div className="pm-clock">
+            <span>Simulation date / time</span>
+            <strong>{timestamp(simulation.view.run.timestamp)}</strong>
+            <small>
+              Day {simulation.view.run.productionDay} · Shift {simulation.view.run.shift} ·{" "}
+              {simulation.view.run.status}
+            </small>
+          </div>
         </div>
-        <div className="pm-clock">
-          <span>Simulation date / time</span>
-          <strong>{timestamp(simulation.view.run.timestamp)}</strong>
-          <small>
-            Day {simulation.view.run.productionDay} · Shift {simulation.view.run.shift} ·{" "}
-            {simulation.view.run.status}
-          </small>
+        <div className="pm-factory-command-row">
+          <div className="pm-factory-heading">
+            <h1>Virtual Factory</h1>
+            <p>Industrial landscape · process · machinery · operating data</p>
+          </div>
+          <div className="pm-virtual-toolbar">
+            <label className="pm-industry-select">
+              <span>Industry</span>
+              <select
+                aria-label="Choose plant industry"
+                value={sectorId}
+                onChange={(event) => {
+                  setSectorId(event.target.value as PlantProfile["id"]);
+                  setViewMode("process");
+                  setScope("overall");
+                }}
+              >
+                {PLANT_PROFILES.map((profile) => (
+                  <option key={profile.id} value={profile.id}>
+                    {profile.label} — {profile.short}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="pm-industry-select pm-view-select">
+              <span>View</span>
+              <select
+                aria-label="Choose plant view"
+                value={viewMode}
+                onChange={(event) => setViewMode(event.target.value as PlantViewMode)}
+              >
+                <option value="process">Diagrammatic process</option>
+                <option value="machinery">Actual plant view</option>
+                <option value="data">Statistical view</option>
+              </select>
+            </label>
+            <label className="pm-industry-select pm-section-select">
+              <span>Plant section</span>
+              <select
+                aria-label="Choose plant section"
+                value={scope}
+                onChange={(event) => setScope(event.target.value as PlantScope)}
+              >
+                {(Object.entries(SCOPE_LABELS) as [PlantScope, string][]).map(([id, label]) => (
+                  <option key={id} value={id}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <SimulationControls
+              status={simulation.view.run.status}
+              speed={simulation.view.run.speed}
+              onPlay={simulation.play}
+              onPause={simulation.pause}
+              onReset={simulation.reset}
+              onSpeed={simulation.setSpeed}
+            />
+          </div>
         </div>
       </header>
-      <div className="pm-virtual-toolbar">
-        <label className="pm-industry-select">
-          <span>Industry</span>
-          <select
-            aria-label="Choose plant industry"
-            value={sectorId}
-            onChange={(event) => {
-              setSectorId(event.target.value as PlantProfile["id"]);
-              setViewMode("process");
-              setScope("overall");
-            }}
-          >
-            {PLANT_PROFILES.map((profile) => (
-              <option key={profile.id} value={profile.id}>
-                {profile.label} — {profile.short}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="pm-industry-select pm-view-select">
-          <span>View</span>
-          <select
-            aria-label="Choose plant view"
-            value={viewMode}
-            onChange={(event) => setViewMode(event.target.value as PlantViewMode)}
-          >
-            <option value="process">Diagrammatic process</option>
-            <option value="machinery">Actual plant view</option>
-            <option value="data">Statistical view</option>
-          </select>
-        </label>
-        <label className="pm-industry-select pm-section-select">
-          <span>Plant section</span>
-          <select
-            aria-label="Choose plant section"
-            value={scope}
-            onChange={(event) => setScope(event.target.value as PlantScope)}
-          >
-            {(Object.entries(SCOPE_LABELS) as [PlantScope, string][]).map(([id, label]) => (
-              <option key={id} value={id}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <SimulationControls
-          status={simulation.view.run.status}
-          speed={simulation.view.run.speed}
-          onPlay={simulation.play}
-          onPause={simulation.pause}
-          onReset={simulation.reset}
-          onSpeed={simulation.setSpeed}
-        />
-      </div>
       <div className="pm-visual-stage" ref={visualStageRef}>
         <button
           className="pm-fullscreen-button"

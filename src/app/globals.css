@@ -3999,9 +3999,10 @@ td {
   }
 }
 .pm-virtual-toolbar {
-  margin: 4px 0 2px;
+  min-width: 0;
+  margin: 0;
   display: grid;
-  grid-template-columns: minmax(205px, 1fr) minmax(145px, 0.62fr) minmax(190px, 0.82fr) auto;
+  grid-template-columns: minmax(175px, 1fr) minmax(125px, 0.62fr) minmax(165px, 0.82fr) auto;
   align-items: stretch;
   gap: 8px;
 }
@@ -4444,12 +4445,26 @@ td {
 }
 
 .pm-factory-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
+  display: grid;
+  gap: 5px;
   padding: 2px 2px 8px;
   border-bottom: 1px solid var(--border);
+}
+.pm-factory-meta-row {
+  min-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.pm-factory-command-row {
+  display: grid;
+  grid-template-columns: minmax(185px, 0.42fr) minmax(0, 2.58fr);
+  align-items: end;
+  gap: 12px;
+}
+.pm-factory-heading {
+  min-width: 0;
 }
 .pm-title-line {
   display: flex;
@@ -4467,8 +4482,8 @@ td {
   letter-spacing: 0.08em;
 }
 .pm-factory-header h1 {
-  margin: 3px 0 1px;
-  font-size: clamp(25px, 2.5vw, 34px);
+  margin: 0 0 1px;
+  font-size: clamp(23px, 2.1vw, 31px);
   font-weight: 590;
   letter-spacing: -0.04em;
 }
@@ -4478,10 +4493,12 @@ td {
   font-size: 10px;
 }
 .pm-clock {
-  min-width: 260px;
-  display: grid;
-  gap: 4px;
-  text-align: right;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  text-align: left;
 }
 .pm-clock span,
 .pm-clock small {
@@ -4492,7 +4509,7 @@ td {
 }
 .pm-clock strong {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .pm-simulation-controls {
@@ -5284,10 +5301,19 @@ td {
   }
   .pm-factory-header {
     align-items: flex-start;
+  }
+  .pm-factory-meta-row,
+  .pm-factory-command-row {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+  .pm-factory-meta-row {
+    align-items: flex-start;
     flex-direction: column;
   }
   .pm-clock {
     min-width: 0;
+    flex-wrap: wrap;
     text-align: left;
   }
   .pm-simulation-controls {
