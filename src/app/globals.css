@@ -3761,6 +3761,90 @@ td {
   top: 24px;
   max-width: 440px;
 }
+.pm-map-controls {
+  position: absolute;
+  z-index: 8;
+  right: 14px;
+  top: 72px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid rgba(117, 224, 179, 0.34);
+  border-radius: 9px;
+  color: #dff8ee;
+  background: rgba(5, 16, 12, 0.86);
+  backdrop-filter: blur(10px);
+}
+.pm-map-controls > button,
+.pm-pan-pad button {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(117, 224, 179, 0.2);
+  border-radius: 5px;
+  color: #dff8ee;
+  background: rgba(12, 35, 28, 0.92);
+  font-size: 8px;
+  cursor: pointer;
+}
+.pm-map-controls > button:hover,
+.pm-map-controls > button.active,
+.pm-pan-pad button:hover {
+  color: #06150f;
+  background: var(--accent);
+}
+.pm-map-controls > strong {
+  min-width: 38px;
+  text-align: center;
+  font: 8px var(--font-mono);
+}
+.pm-pan-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 22px);
+  grid-template-rows: repeat(2, 22px);
+  gap: 2px;
+}
+.pm-pan-pad button {
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+}
+.pm-pan-pad button:first-child {
+  grid-column: 2;
+}
+.pm-pan-pad button:nth-child(2) {
+  grid-column: 1;
+}
+.pm-pan-pad button:nth-child(3) {
+  grid-column: 3;
+}
+.pm-pan-pad button:last-child {
+  grid-column: 2;
+  grid-row: 2;
+}
+.pm-machinery-photo.is-walkthrough > img {
+  filter: saturate(1.05) contrast(1.05);
+}
+.pm-machinery-photo.is-walkthrough::after {
+  content: "WALK-THROUGH · FLOOR LEVEL";
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  top: 18px;
+  padding: 5px 9px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(117, 224, 179, 0.4);
+  border-radius: 999px;
+  color: var(--accent);
+  background: rgba(5, 16, 12, 0.82);
+  font: 8px var(--font-mono);
+  letter-spacing: 0.1em;
+}
 .pm-photo-hotspots button {
   position: absolute;
   z-index: 3;
@@ -3916,13 +4000,43 @@ td {
 }
 .pm-virtual-toolbar {
   margin: 14px 0 2px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(210px, 0.72fr) minmax(330px, 1fr) auto;
   align-items: stretch;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
+}
+.pm-industry-select {
+  min-width: 0;
+  padding: 6px 10px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-1);
+}
+.pm-industry-select > span {
+  color: var(--accent);
+  font: 8px var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pm-industry-select select {
+  width: 100%;
+  min-width: 0;
+  padding: 0 25px 0 0;
+  overflow: hidden;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font-size: 10px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
 .pm-view-switcher {
-  width: fit-content;
+  width: 100%;
   margin: 0;
   padding: 4px;
   display: flex;
@@ -3933,7 +4047,9 @@ td {
 }
 .pm-view-switcher button {
   min-height: 36px;
-  padding: 0 14px;
+  padding: 0 9px;
+  flex: 1;
+  justify-content: center;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -3941,7 +4057,7 @@ td {
   border-radius: 7px;
   color: var(--text-muted);
   background: transparent;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 750;
   cursor: pointer;
 }
@@ -4375,7 +4491,7 @@ td {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px;
+  padding: 6px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-1);
@@ -4386,7 +4502,7 @@ td {
   justify-content: center;
   gap: 5px;
   min-height: 30px;
-  padding: 5px 9px;
+  padding: 5px 7px;
   color: var(--text-muted);
   border: 1px solid var(--border);
   border-radius: 5px;
@@ -4416,7 +4532,7 @@ td {
   margin-left: auto;
 }
 .pm-speed-group button {
-  min-width: 42px;
+  min-width: 34px;
 }
 
 .pm-kpi-rail {
@@ -5134,6 +5250,12 @@ td {
   .pm-photo-hotspots button > span {
     display: none;
   }
+  .pm-map-controls {
+    left: 12px;
+    right: 12px;
+    top: 90px;
+    flex-wrap: wrap;
+  }
   .pm-sector-stat-cards,
   .pm-machinery-photo > footer {
     grid-template-columns: 1fr;
@@ -5142,8 +5264,8 @@ td {
     grid-template-columns: 1fr;
   }
   .pm-virtual-toolbar {
+    grid-template-columns: 1fr;
     align-items: stretch;
-    flex-direction: column;
   }
   .pm-view-switcher {
     width: 100%;

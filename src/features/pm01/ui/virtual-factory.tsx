@@ -16,9 +16,15 @@ import {
   Image as ImageIcon,
   Maximize2,
   Minimize2,
+  Minus,
+  MoveDown,
+  MoveLeft,
+  MoveRight,
+  MoveUp,
   PackageCheck,
   Pause,
   Play,
+  Plus,
   RotateCcw,
   Sparkles,
   Workflow,
@@ -375,6 +381,102 @@ const BY_PRODUCTS: Record<PlantProfile["id"], string> = {
   sugar: "Bagasse, molasses & press mud"
 };
 
+const SCOPE_METRICS: Record<
+  PlantProfile["id"],
+  Record<PlantScope, readonly (readonly [string, string])[]>
+> = {
+  chemical: {
+    overall: PLANT_PROFILES[0].stats,
+    input: [
+      ["Feed available", "296 T"],
+      ["Incoming QC", "100%"],
+      ["Tank utilization", "72%"]
+    ],
+    process: [
+      ["Reactor load", "84%"],
+      ["Process yield", "92.1%"],
+      ["Energy", "412 kWh-eq/T"]
+    ],
+    output: [
+      ["Packing rate", "5.0 T/h"],
+      ["Final QC", "Released"],
+      ["Losses", "1.8%"]
+    ]
+  },
+  msme: {
+    overall: PLANT_PROFILES[1].stats,
+    input: [
+      ["Material cover", "3.2 days"],
+      ["Incoming QC", "98.8%"],
+      ["Stores fill", "68%"]
+    ],
+    process: [
+      ["Cycle time", "42 sec"],
+      ["First-pass yield", "97.2%"],
+      ["WIP", "386 units"]
+    ],
+    output: [
+      ["Dispatch ready", "612 units"],
+      ["Final QC", "99.1%"],
+      ["Scrap", "2.1%"]
+    ]
+  },
+  "clean-tech": {
+    overall: PLANT_PROFILES[2].stats,
+    input: [
+      ["Limestone stock", "4,860 T"],
+      ["Moisture QC", "6.2%"],
+      ["Conveyor load", "74%"]
+    ],
+    process: [
+      ["SO₂ removal", "96.8%"],
+      ["Absorber load", "88%"],
+      ["Gas flow", "2.4M Nm³/h"]
+    ],
+    output: [
+      ["Gypsum", "18.4 T/h"],
+      ["Fly ash", "42 T/h"],
+      ["Rail loading", "286 T/h"]
+    ]
+  },
+  dairy: {
+    overall: PLANT_PROFILES[3].stats,
+    input: [
+      ["Milk receiving", "18 KL/h"],
+      ["Incoming QC", "100%"],
+      ["Chilled stock", "72%"]
+    ],
+    process: [
+      ["Line rate", "17.5 KL/h"],
+      ["Yield", "98.6%"],
+      ["CIP compliance", "100%"]
+    ],
+    output: [
+      ["Filling rate", "19,200 packs/h"],
+      ["Final QC", "Released"],
+      ["Whey recovery", "92%"]
+    ]
+  },
+  sugar: {
+    overall: PLANT_PROFILES[4].stats,
+    input: [
+      ["Cane yard", "8,400 T"],
+      ["Pol QC", "13.2%"],
+      ["Feed rate", "217 T/h"]
+    ],
+    process: [
+      ["Crush rate", "5,200 TCD"],
+      ["Recovery", "11.4%"],
+      ["Steam balance", "Stable"]
+    ],
+    output: [
+      ["Bagging", "24 T/h"],
+      ["Sugar QC", "M-30"],
+      ["Bagasse export", "18.6 MW"]
+    ]
+  }
+};
+
 function equipmentForScope(profile: PlantProfile, scope: PlantScope) {
   if (scope === "input") return [profile.flow[0], profile.flow[1], "Incoming quality control"];
   if (scope === "process") return profile.flow.slice(2, 6);
@@ -459,9 +561,28 @@ function SectorProcessView({
 
 function MachineryView({ profile, scope }: { profile: PlantProfile; scope: PlantScope }) {
   const equipment = equipmentForScope(profile, scope);
+  const initialPosition = {
+    overall: { x: 50, y: 50 },
+    input: { x: 18, y: 50 },
+    process: { x: 52, y: 48 },
+    output: { x: 86, y: 52 }
+  }[scope];
+  const [zoom, setZoom] = useState(scope === "overall" ? 1 : 1.35);
+  const [pan, setPan] = useState(initialPosition);
+  const [walkthrough, setWalkthrough] = useState(false);
+  const move = (x: number, y: number) =>
+    setPan((current) => ({
+      x: Math.max(5, Math.min(95, current.x + x)),
+      y: Math.max(10, Math.min(90, current.y + y))
+    }));
+  const resetCamera = () => {
+    setZoom(scope === "overall" ? 1 : 1.35);
+    setPan(initialPosition);
+    setWalkthrough(false);
+  };
   return (
     <section
-      className={`pm-machinery-photo pm-photo-${scope}`}
+      className={`pm-machinery-photo pm-photo-${scope} ${walkthrough ? "is-walkthrough" : ""}`}
       aria-label={`${profile.label} ${SCOPE_LABELS[scope]} machinery view`}
     >
       <Image
@@ -470,6 +591,10 @@ function MachineryView({ profile, scope }: { profile: PlantProfile; scope: Plant
         fill
         sizes="(max-width: 820px) 100vw, calc(100vw - 248px)"
         quality={75}
+        style={{
+          transform: `scale(${zoom * (walkthrough ? 1.42 : 1)})`,
+          objectPosition: `${pan.x}% ${walkthrough ? Math.min(88, pan.y + 16) : pan.y}%`
+        }}
       />
       <div className="pm-photo-shade" />
       <header>
@@ -477,6 +602,39 @@ function MachineryView({ profile, scope }: { profile: PlantProfile; scope: Plant
         <h2>{profile.label}</h2>
         <p>Explore the physical equipment landscape with operating context overlaid.</p>
       </header>
+      <div className="pm-map-controls" aria-label="Plant visual navigation controls">
+        <button onClick={() => setZoom((value) => Math.min(3, value + 0.25))} aria-label="Zoom in">
+          <Plus size={15} />
+        </button>
+        <strong>{Math.round(zoom * 100)}%</strong>
+        <button onClick={() => setZoom((value) => Math.max(1, value - 0.25))} aria-label="Zoom out">
+          <Minus size={15} />
+        </button>
+        <span className="pm-pan-pad">
+          <button onClick={() => move(0, -10)} aria-label="Pan up">
+            <MoveUp size={13} />
+          </button>
+          <button onClick={() => move(-10, 0)} aria-label="Pan left">
+            <MoveLeft size={13} />
+          </button>
+          <button onClick={() => move(10, 0)} aria-label="Pan right">
+            <MoveRight size={13} />
+          </button>
+          <button onClick={() => move(0, 10)} aria-label="Pan down">
+            <MoveDown size={13} />
+          </button>
+        </span>
+        <button onClick={resetCamera} aria-label="Reset plant view">
+          <RotateCcw size={14} />
+        </button>
+        <button
+          className={walkthrough ? "active" : ""}
+          onClick={() => setWalkthrough((value) => !value)}
+          aria-pressed={walkthrough}
+        >
+          <Factory size={14} /> {walkthrough ? "Exit walk-through" : "Walk-through view"}
+        </button>
+      </div>
       <div className="pm-photo-hotspots">
         {equipment.slice(0, 6).map((item, index) => (
           <button
@@ -495,7 +653,7 @@ function MachineryView({ profile, scope }: { profile: PlantProfile; scope: Plant
         ))}
       </div>
       <footer>
-        {profile.stats.map(([label, value]) => (
+        {SCOPE_METRICS[profile.id][scope].map(([label, value]) => (
           <span key={label}>
             {label}
             <strong>{value}</strong>
@@ -996,25 +1154,25 @@ export function VirtualFactory() {
           </small>
         </div>
       </header>
-      <section className="pm-sector-selector" aria-label="Choose plant industry">
-        {PLANT_PROFILES.map((profile, index) => (
-          <button
-            key={profile.id}
-            className={sectorId === profile.id ? "active" : ""}
-            aria-pressed={sectorId === profile.id}
-            onClick={() => {
-              setSectorId(profile.id);
+      <div className="pm-virtual-toolbar">
+        <label className="pm-industry-select">
+          <span>Industry</span>
+          <select
+            aria-label="Choose plant industry"
+            value={sectorId}
+            onChange={(event) => {
+              setSectorId(event.target.value as PlantProfile["id"]);
               setViewMode("process");
               setScope("overall");
             }}
           >
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <strong>{profile.label}</strong>
-            <small>{profile.short}</small>
-          </button>
-        ))}
-      </section>
-      <div className="pm-virtual-toolbar">
+            {PLANT_PROFILES.map((profile) => (
+              <option key={profile.id} value={profile.id}>
+                {profile.label} — {profile.short}
+              </option>
+            ))}
+          </select>
+        </label>
         <div className="pm-view-switcher" role="tablist" aria-label="Virtual Plant viewing mode">
           <button
             role="tab"
@@ -1076,7 +1234,11 @@ export function VirtualFactory() {
             />
           )
         ) : viewMode === "machinery" ? (
-          <MachineryView profile={activeProfile} scope={scope} />
+          <MachineryView
+            key={`${activeProfile.id}-${scope}`}
+            profile={activeProfile}
+            scope={scope}
+          />
         ) : sectorId === "chemical" && scope === "overall" ? (
           <>
             <KpiRail view={simulation.view} />

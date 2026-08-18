@@ -46,6 +46,7 @@ test("PM-01 topology remains usable on a compact presentation viewport", async (
 
 test("Virtual Plant switches industry, plant scope, and visual layer", async ({ page }) => {
   await page.goto("/virtual-plant");
+  const industry = page.getByRole("combobox", { name: "Choose plant industry" });
   for (const sector of [
     "Chemical Industry",
     "MSME Manufacturing",
@@ -53,10 +54,10 @@ test("Virtual Plant switches industry, plant scope, and visual layer", async ({ 
     "Dairy Plant",
     "Sugar Factory"
   ]) {
-    await expect(page.getByRole("button", { name: new RegExp(sector) })).toBeVisible();
+    await expect(industry.getByRole("option", { name: new RegExp(sector) })).toHaveCount(1);
   }
 
-  await page.getByRole("button", { name: /Dairy Plant/ }).click();
+  await industry.selectOption("dairy");
   await expect(page.getByRole("tab", { name: "Overall plant · A–Z" })).toHaveAttribute(
     "aria-selected",
     "true"
@@ -66,10 +67,18 @@ test("Virtual Plant switches industry, plant scope, and visual layer", async ({ 
   await page.getByRole("tab", { name: "Raw material · storage · QC" }).click();
   await expect(page.getByRole("region", { name: /Dairy Plant Raw material/ })).toBeVisible();
   await page.getByRole("tab", { name: "Actual plant view" }).click();
-  await expect(
-    page.getByRole("region", { name: /Dairy Plant Raw material.*machinery/ })
-  ).toBeVisible();
+  const machinery = page.getByRole("region", { name: /Dairy Plant Raw material.*machinery/ });
+  await expect(machinery).toBeVisible();
   await expect(page.getByAltText(/Dairy Plant machinery/)).toBeVisible();
+  await expect(machinery).toContainText("Milk receiving");
+  await expect(machinery).toContainText("Incoming QC");
+  await page.getByRole("button", { name: "Zoom in" }).click();
+  await expect(page.getByText("160%", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Walk-through view" }).click();
+  await expect(page.getByRole("button", { name: "Exit walk-through" })).toHaveAttribute(
+    "aria-pressed",
+    "true"
+  );
 
   await page.getByRole("tab", { name: "Finished goods · QC · waste" }).click();
   await expect(
