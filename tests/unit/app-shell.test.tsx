@@ -1,5 +1,6 @@
 ﻿import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent } from "@testing-library/react";
 import { AppShell } from "@/components/app-shell";
 
 vi.mock("next/navigation", () => ({ usePathname: () => "/command" }));
@@ -41,6 +42,8 @@ describe("application shell", () => {
     expect(screen.getByRole("button", { name: "Notifications" })).toHaveTextContent(
       "1 notification"
     );
+    fireEvent.click(screen.getByRole("button", { name: "Hide sidebar" }));
+    expect(screen.getByRole("button", { name: "Show sidebar" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Route content" })).toBeVisible();
   });
 });

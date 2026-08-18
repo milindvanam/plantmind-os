@@ -17,6 +17,7 @@ import {
   Gauge,
   Menu,
   PanelLeftClose,
+  PanelLeftOpen,
   Sparkles,
   UserRound,
   X
@@ -120,15 +121,23 @@ function ShellContent({ children }: { children: React.ReactNode }) {
   const realDataMode = pathname.startsWith("/real-data");
   const virtualPlantMode = pathname.startsWith("/virtual-plant");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [scenarioOpen, setScenarioOpen] = useState(false);
   return (
-    <div className="app-shell">
+    <div className={sidebarHidden ? "app-shell sidebar-hidden" : "app-shell"}>
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
       <aside className={mobileOpen ? "sidebar open" : "sidebar"}>
         <div className="sidebar-head">
           <Logo />
+          <IconButton
+            className="desktop-only"
+            label="Hide sidebar"
+            onClick={() => setSidebarHidden(true)}
+          >
+            <PanelLeftClose size={18} />
+          </IconButton>
           <IconButton
             className="mobile-only"
             label="Close navigation"
@@ -184,6 +193,15 @@ function ShellContent({ children }: { children: React.ReactNode }) {
       <div className="shell-body">
         <header className="topbar">
           <div className="topbar-left">
+            {sidebarHidden && (
+              <IconButton
+                className="desktop-only"
+                label="Show sidebar"
+                onClick={() => setSidebarHidden(false)}
+              >
+                <PanelLeftOpen size={18} />
+              </IconButton>
+            )}
             <IconButton
               className="mobile-only"
               label="Open navigation"

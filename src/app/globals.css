@@ -2146,6 +2146,14 @@ button:disabled {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
 }
+.app-shell.sidebar-hidden {
+  grid-template-columns: 0 minmax(0, 1fr);
+}
+.app-shell.sidebar-hidden .sidebar {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-100%);
+}
 .sidebar {
   position: sticky;
   top: 0;
@@ -2156,6 +2164,9 @@ button:disabled {
   background: var(--sidebar);
   border-right: 1px solid var(--border);
   z-index: 40;
+  transition:
+    transform 0.22s ease,
+    opacity 0.18s ease;
 }
 .sidebar-head {
   min-height: 48px;
@@ -2163,6 +2174,11 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   padding: 0 8px;
+}
+.sidebar-head .desktop-only {
+  width: 30px;
+  height: 30px;
+  margin-left: 6px;
 }
 .logo {
   display: flex;
@@ -3159,6 +3175,9 @@ td {
 .mobile-only {
   display: none;
 }
+.desktop-only {
+  display: inline-grid;
+}
 .nav-scrim {
   display: none;
 }
@@ -3202,6 +3221,12 @@ td {
   }
   .mobile-only {
     display: inline-grid;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+  .app-shell.sidebar-hidden {
+    display: block;
   }
   .sidebar {
     position: fixed;
@@ -3358,6 +3383,537 @@ td {
 }
 
 /* PM-01 Virtual Factory ------------------------------------------------- */
+.pm-sector-selector {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 16px 0 2px;
+}
+.pm-sector-selector button {
+  min-width: 0;
+  padding: 12px;
+  display: grid;
+  gap: 3px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-muted);
+  text-align: left;
+  background: var(--surface-1);
+  cursor: pointer;
+}
+.pm-sector-selector button:hover,
+.pm-sector-selector button.active {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface-1));
+}
+.pm-sector-selector span {
+  color: var(--accent);
+  font: 8px var(--font-mono);
+}
+.pm-sector-selector strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-sector-selector small {
+  overflow: hidden;
+  color: var(--text-subtle);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-scope-switcher {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 4px 0 2px;
+}
+.pm-scope-switcher button {
+  min-height: 42px;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  text-align: left;
+  background: var(--surface-1);
+  cursor: pointer;
+}
+.pm-scope-switcher button[aria-selected="true"] {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface-1));
+}
+.pm-scope-switcher span {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--accent);
+  font: 8px var(--font-mono);
+}
+.pm-scope-switcher strong {
+  overflow: hidden;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-sector-process,
+.pm-machinery-photo,
+.pm-sector-statistics {
+  margin-top: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-1);
+}
+.pm-visual-stage {
+  position: relative;
+}
+.pm-fullscreen-button {
+  position: absolute;
+  z-index: 12;
+  top: 30px;
+  right: 14px;
+  min-height: 34px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(117, 224, 179, 0.38);
+  border-radius: 8px;
+  color: #dff8ee;
+  background: rgba(5, 16, 12, 0.82);
+  backdrop-filter: blur(10px);
+  font-size: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.pm-fullscreen-button:hover,
+.pm-fullscreen-button:focus-visible {
+  color: #06150f;
+  background: var(--accent);
+}
+.pm-visual-stage:fullscreen {
+  padding: 16px;
+  overflow: auto;
+  background: #06100d;
+}
+.pm-visual-stage:fullscreen > .pm-fullscreen-button {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+}
+.pm-visual-stage:fullscreen > .pm-sector-process,
+.pm-visual-stage:fullscreen > .pm-machinery-photo,
+.pm-visual-stage:fullscreen > .pm-sector-statistics,
+.pm-visual-stage:fullscreen > .pm-plant-visual {
+  min-height: calc(100vh - 32px);
+  margin-top: 0;
+}
+.pm-sector-process {
+  position: relative;
+  min-height: 545px;
+  padding: 22px;
+  color: #edf6f2;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(117, 224, 179, 0.13), transparent 34%), #07110e;
+}
+.pm-sector-process::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(117, 224, 179, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(117, 224, 179, 0.16) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+.pm-sector-process > header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+.pm-sector-process h2,
+.pm-machinery-photo h2,
+.pm-sector-statistics h2 {
+  margin: 4px 0;
+  font-size: 22px;
+}
+.pm-sector-process header p,
+.pm-machinery-photo header p {
+  margin: 0;
+  color: #91a69e;
+  font-size: 10px;
+}
+.pm-sector-live {
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font: 9px var(--font-mono);
+}
+.pm-sector-live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+.pm-sector-flow {
+  position: relative;
+  z-index: 2;
+  margin-top: 74px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 12px;
+}
+.pm-scope-input .pm-sector-flow,
+.pm-scope-process .pm-sector-flow,
+.pm-scope-output .pm-sector-flow {
+  max-width: 780px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.pm-scope-input .pm-sector-flow {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.pm-scope-process .pm-sector-flow,
+.pm-scope-output .pm-sector-flow {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.pm-sector-unit {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+.pm-sector-equipment {
+  width: 68px;
+  height: 112px;
+  position: relative;
+  display: block;
+  border: 2px solid #456d60;
+  border-radius: 24px 24px 8px 8px;
+  background: linear-gradient(90deg, #0b1c18, #1c3c34, #091713);
+  box-shadow: 0 22px 28px rgba(0, 0, 0, 0.35);
+}
+.pm-sector-equipment > i:first-child {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  height: 56%;
+  border-radius: 12px 12px 4px 4px;
+  background: rgba(117, 224, 179, 0.22);
+}
+.pm-sector-equipment > i:nth-child(2) {
+  position: absolute;
+  left: 50%;
+  top: 17px;
+  width: 28px;
+  height: 28px;
+  transform: translateX(-50%);
+  border: 2px dashed var(--accent);
+  border-radius: 50%;
+}
+.pm-sector-process.is-running .pm-sector-equipment > i:nth-child(2) {
+  animation: pm-machinery-spin 2.2s linear infinite;
+}
+.pm-sector-equipment > i:last-child {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+.pm-sector-unit > strong {
+  max-width: 100px;
+  margin-top: 13px;
+  font-size: 9px;
+}
+.pm-sector-unit > small {
+  color: #789087;
+  font-size: 7px;
+}
+.pm-sector-unit > b {
+  position: absolute;
+  z-index: -1;
+  left: calc(50% + 34px);
+  top: 57px;
+  width: calc(100% - 22px);
+  height: 3px;
+  background: #17382f;
+}
+.pm-sector-unit > b i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  top: -2px;
+  left: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.pm-sector-process.is-running .pm-sector-unit > b i {
+  animation: pm-sector-hop 1.8s linear infinite;
+}
+.pm-sector-support {
+  position: relative;
+  z-index: 2;
+  margin: 38px auto -34px;
+  padding: 9px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  border: 1px solid rgba(128, 173, 156, 0.2);
+  border-radius: 9px;
+  background: rgba(7, 17, 14, 0.7);
+}
+.pm-sector-support span {
+  padding: 6px 8px;
+  display: grid;
+  gap: 2px;
+  color: #789087;
+  font-size: 7px;
+  border-left: 2px solid rgba(117, 224, 179, 0.38);
+}
+.pm-sector-support strong {
+  color: #d8e8e1;
+  font-size: 8px;
+}
+.pm-sector-stat-strip {
+  position: relative;
+  z-index: 2;
+  margin-top: 68px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid rgba(128, 173, 156, 0.2);
+  border-radius: 9px;
+  background: rgba(7, 17, 14, 0.72);
+}
+.pm-sector-stat-strip span {
+  padding: 14px;
+  display: grid;
+  color: #789087;
+  font-size: 8px;
+  border-right: 1px solid rgba(128, 173, 156, 0.2);
+}
+.pm-sector-stat-strip span:last-child {
+  border: 0;
+}
+.pm-sector-stat-strip strong {
+  margin-top: 4px;
+  color: var(--accent);
+  font: 16px var(--font-mono);
+}
+.pm-machinery-photo {
+  min-height: 590px;
+  position: relative;
+  color: #f2f7f5;
+  background: #07100e;
+}
+.pm-machinery-photo > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform 0.55s ease,
+    object-position 0.55s ease;
+}
+.pm-machinery-photo.pm-photo-input > img {
+  transform: scale(1.32);
+  object-position: 15% 50%;
+}
+.pm-machinery-photo.pm-photo-process > img {
+  transform: scale(1.26);
+  object-position: 52% 48%;
+}
+.pm-machinery-photo.pm-photo-output > img {
+  transform: scale(1.3);
+  object-position: 88% 52%;
+}
+.pm-photo-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(4, 11, 9, 0.82), transparent 55%),
+    linear-gradient(0deg, rgba(4, 11, 9, 0.86), transparent 40%);
+}
+.pm-machinery-photo > header {
+  position: absolute;
+  z-index: 2;
+  left: 26px;
+  top: 24px;
+  max-width: 440px;
+}
+.pm-photo-hotspots button {
+  position: absolute;
+  z-index: 3;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  border: 0;
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+}
+.pm-photo-hotspots button > i {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d9fff0;
+  border-radius: 50%;
+  color: #062018;
+  background: var(--accent);
+  box-shadow:
+    0 0 0 7px rgba(117, 224, 179, 0.14),
+    0 5px 18px #000;
+  font: 9px var(--font-mono);
+  animation: pm-hotspot-pulse 2.3s ease-in-out infinite;
+}
+.pm-photo-hotspots button > span {
+  margin-left: 8px;
+  padding: 7px 9px;
+  display: grid;
+  border: 1px solid rgba(117, 224, 179, 0.4);
+  border-radius: 6px;
+  text-align: left;
+  background: rgba(5, 16, 12, 0.9);
+  font-size: 9px;
+  white-space: nowrap;
+}
+.pm-photo-hotspots button:hover > span,
+.pm-photo-hotspots button:focus-visible > span {
+  border-color: var(--accent);
+  background: rgba(5, 16, 12, 0.96);
+}
+.pm-photo-hotspots small {
+  color: #8fa49c;
+  font-size: 7px;
+}
+.pm-machinery-photo > footer {
+  position: absolute;
+  z-index: 2;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid rgba(117, 224, 179, 0.28);
+  border-radius: 9px;
+  backdrop-filter: blur(10px);
+  background: rgba(5, 16, 12, 0.72);
+}
+.pm-machinery-photo footer span {
+  padding: 12px 15px;
+  display: grid;
+  color: #91a69e;
+  font-size: 8px;
+}
+.pm-machinery-photo footer strong {
+  margin-top: 3px;
+  color: var(--accent);
+  font: 15px var(--font-mono);
+}
+.pm-sector-statistics {
+  padding: 22px;
+}
+.pm-sector-statistics > header {
+  margin-bottom: 18px;
+}
+.pm-sector-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.pm-sector-stat-cards > div {
+  position: relative;
+  padding: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-2);
+}
+.pm-sector-stat-cards span {
+  color: var(--text-subtle);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+.pm-sector-stat-cards strong {
+  display: block;
+  margin-top: 8px;
+  font: 22px var(--font-mono);
+}
+.pm-sector-stat-cards i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 78%;
+  height: 2px;
+  background: var(--accent);
+}
+.pm-sector-equipment-table {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.pm-sector-equipment-table > div {
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: 28px 1fr auto auto;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+.pm-sector-equipment-table span {
+  color: var(--accent);
+  font: 8px var(--font-mono);
+}
+.pm-sector-equipment-table strong {
+  font-size: 10px;
+}
+.pm-sector-equipment-table small {
+  color: var(--text-subtle);
+  font-size: 8px;
+}
+.pm-sector-equipment-table b {
+  color: var(--accent);
+  font: 10px var(--font-mono);
+}
+.pm-sector-statistics > p {
+  color: var(--text-subtle);
+  font-size: 8px;
+}
+@keyframes pm-sector-hop {
+  to {
+    left: 100%;
+  }
+}
+@keyframes pm-hotspot-pulse {
+  50% {
+    box-shadow:
+      0 0 0 12px rgba(117, 224, 179, 0.04),
+      0 5px 18px #000;
+  }
+}
 .pm-virtual-toolbar {
   margin: 14px 0 2px;
   display: flex;
@@ -4526,6 +5082,15 @@ td {
 }
 
 @media (max-width: 1180px) {
+  .pm-sector-selector {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .pm-sector-flow {
+    min-width: 820px;
+  }
+  .pm-sector-process {
+    overflow-x: auto;
+  }
   .pm-machinery-line,
   .pm-scene-utilities,
   .pm-scene-summary {
@@ -4560,6 +5125,22 @@ td {
   }
 }
 @media (max-width: 760px) {
+  .pm-sector-selector {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pm-scope-switcher {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pm-photo-hotspots button > span {
+    display: none;
+  }
+  .pm-sector-stat-cards,
+  .pm-machinery-photo > footer {
+    grid-template-columns: 1fr;
+  }
+  .pm-sector-equipment-table {
+    grid-template-columns: 1fr;
+  }
   .pm-virtual-toolbar {
     align-items: stretch;
     flex-direction: column;

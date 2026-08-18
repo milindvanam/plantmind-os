@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   BarChart3,
@@ -12,11 +13,15 @@ import {
   Flame,
   FlaskConical,
   Gauge,
+  Image as ImageIcon,
+  Maximize2,
+  Minimize2,
   PackageCheck,
   Pause,
   Play,
   RotateCcw,
   Sparkles,
+  Workflow,
   Truck,
   Warehouse,
   Wind,
@@ -51,6 +56,114 @@ const STATUS_LABELS: Record<Pm01DisplayStatus, string> = {
   CRITICAL: "Critical",
   OFFLINE: "Offline"
 };
+
+const PLANT_PROFILES = [
+  {
+    id: "chemical",
+    label: "Chemical Industry",
+    short: "Specialty chemicals",
+    image: "/plant-views/chemical.png",
+    flow: [
+      "Tank farm",
+      "Feed prep",
+      "Reactor",
+      "Separation",
+      "Finishing",
+      "Packaging",
+      "Warehouse",
+      "Dispatch"
+    ],
+    stats: [
+      ["Throughput", "99.8 T/day"],
+      ["OEE", "86.4%"],
+      ["Energy intensity", "412 kWh-eq/T"]
+    ]
+  },
+  {
+    id: "msme",
+    label: "MSME Manufacturing Plant",
+    short: "Precision components",
+    image: "/plant-views/msme-manufacturing.png",
+    flow: [
+      "Raw stores",
+      "CNC cell",
+      "Press shop",
+      "Welding",
+      "Inspection",
+      "Assembly",
+      "Finished goods",
+      "Dispatch"
+    ],
+    stats: [
+      ["Output", "1,248 units/day"],
+      ["First-pass yield", "97.2%"],
+      ["Machine utilization", "81.6%"]
+    ]
+  },
+  {
+    id: "clean-tech",
+    label: "Clean-tech EPC & Bulk Handling",
+    short: "Ducon-like equipment landscape",
+    image: "/plant-views/clean-tech-epc.png",
+    flow: [
+      "Limestone intake",
+      "Conveying",
+      "Reagent prep",
+      "FGD absorber",
+      "Bag filter",
+      "Ash silos",
+      "Dewatering",
+      "Rail loading"
+    ],
+    stats: [
+      ["Gas treated", "2.4M Nm³/h"],
+      ["SO₂ removal", "96.8%"],
+      ["Bulk flow", "286 T/h"]
+    ]
+  },
+  {
+    id: "dairy",
+    label: "Dairy Plant",
+    short: "Milk processing & cold chain",
+    image: "/plant-views/dairy.png",
+    flow: [
+      "Milk reception",
+      "Chilling",
+      "Separation",
+      "Pasteurization",
+      "Homogenization",
+      "Filling",
+      "Cold storage",
+      "Dispatch"
+    ],
+    stats: [
+      ["Milk processed", "420 KL/day"],
+      ["Yield", "98.6%"],
+      ["CIP compliance", "100%"]
+    ]
+  },
+  {
+    id: "sugar",
+    label: "Sugar Factory",
+    short: "Cane to crystal & energy",
+    image: "/plant-views/sugar.png",
+    flow: [
+      "Cane yard",
+      "Milling",
+      "Clarification",
+      "Evaporation",
+      "Crystallization",
+      "Centrifugals",
+      "Bagging",
+      "Cogeneration"
+    ],
+    stats: [
+      ["Cane crush", "5,200 TCD"],
+      ["Recovery", "11.4%"],
+      ["Export power", "18.6 MW"]
+    ]
+  }
+] as const;
 
 function StatusMark({ status }: { status: Pm01DisplayStatus }) {
   return (
@@ -239,6 +352,190 @@ function AnimatedPlantView({
       <p className="pm-visual-boundary">
         Animated operating view derived only from observable process state. Select equipment to
         inspect its current tags.
+      </p>
+    </section>
+  );
+}
+
+type PlantProfile = (typeof PLANT_PROFILES)[number];
+type PlantScope = "overall" | "input" | "process" | "output";
+
+const SCOPE_LABELS: Record<PlantScope, string> = {
+  overall: "Overall plant · A–Z",
+  input: "Raw material · storage · QC",
+  process: "Production process",
+  output: "Finished goods · QC · waste"
+};
+
+const BY_PRODUCTS: Record<PlantProfile["id"], string> = {
+  chemical: "Effluent & process losses",
+  msme: "Scrap & rework",
+  "clean-tech": "Gypsum & fly ash",
+  dairy: "Cream, whey & effluent",
+  sugar: "Bagasse, molasses & press mud"
+};
+
+function equipmentForScope(profile: PlantProfile, scope: PlantScope) {
+  if (scope === "input") return [profile.flow[0], profile.flow[1], "Incoming quality control"];
+  if (scope === "process") return profile.flow.slice(2, 6);
+  if (scope === "output")
+    return [profile.flow[6], "Final product QC", profile.flow[7], BY_PRODUCTS[profile.id]];
+  return profile.flow;
+}
+
+function SectorProcessView({
+  profile,
+  running,
+  scope
+}: {
+  profile: PlantProfile;
+  running: boolean;
+  scope: PlantScope;
+}) {
+  const equipment = equipmentForScope(profile, scope);
+  return (
+    <section
+      className={`pm-sector-process pm-scope-${scope} ${running ? "is-running" : ""}`}
+      aria-label={`${profile.label} ${SCOPE_LABELS[scope]} animated process map`}
+    >
+      <header>
+        <div>
+          <span className="pm-section-kicker">Animated operating map · {SCOPE_LABELS[scope]}</span>
+          <h2>{profile.label}</h2>
+          <p>{profile.short} · equipment-to-equipment operating context</p>
+        </div>
+        <span className="pm-sector-live">
+          <i /> {running ? "LIVE" : "READY"}
+        </span>
+      </header>
+      <div className="pm-sector-flow">
+        {equipment.map((item, index) => (
+          <div className="pm-sector-unit" key={item}>
+            <span className="pm-sector-equipment">
+              <i />
+              <i />
+              <i />
+            </span>
+            <strong>{item}</strong>
+            <small>{index % 3 === 0 ? "Normal" : index % 3 === 1 ? "In service" : "Stable"}</small>
+            {index < equipment.length - 1 && (
+              <b aria-hidden="true">
+                <i />
+              </b>
+            )}
+          </div>
+        ))}
+      </div>
+      {scope === "overall" && (
+        <div className="pm-sector-support" aria-label="Plant-wide support systems">
+          <span>
+            <strong>Incoming QC</strong> Material release
+          </span>
+          <span>
+            <strong>Utilities</strong> Power · steam · air · water
+          </span>
+          <span>
+            <strong>Maintenance</strong> Workshop · spares
+          </span>
+          <span>
+            <strong>Environment</strong> Effluent · waste · recovery
+          </span>
+          <span>
+            <strong>Final QC</strong> Product release
+          </span>
+        </div>
+      )}
+      <div className="pm-sector-stat-strip">
+        {profile.stats.map(([label, value]) => (
+          <span key={label}>
+            {label}
+            <strong>{value}</strong>
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MachineryView({ profile, scope }: { profile: PlantProfile; scope: PlantScope }) {
+  const equipment = equipmentForScope(profile, scope);
+  return (
+    <section
+      className={`pm-machinery-photo pm-photo-${scope}`}
+      aria-label={`${profile.label} ${SCOPE_LABELS[scope]} machinery view`}
+    >
+      <Image
+        src={profile.image}
+        alt={`${profile.label} machinery and process equipment overview`}
+        fill
+        sizes="(max-width: 820px) 100vw, calc(100vw - 248px)"
+        quality={75}
+      />
+      <div className="pm-photo-shade" />
+      <header>
+        <span className="pm-section-kicker">Realistic machinery layer · {SCOPE_LABELS[scope]}</span>
+        <h2>{profile.label}</h2>
+        <p>Explore the physical equipment landscape with operating context overlaid.</p>
+      </header>
+      <div className="pm-photo-hotspots">
+        {equipment.slice(0, 6).map((item, index) => (
+          <button
+            key={item}
+            style={{
+              left: `${12 + (index % 3) * 34}%`,
+              top: `${32 + Math.floor(index / 3) * 34}%`
+            }}
+          >
+            <i>{index + 1}</i>
+            <span>
+              {item}
+              <small>Normal · observable</small>
+            </span>
+          </button>
+        ))}
+      </div>
+      <footer>
+        {profile.stats.map(([label, value]) => (
+          <span key={label}>
+            {label}
+            <strong>{value}</strong>
+          </span>
+        ))}
+      </footer>
+    </section>
+  );
+}
+
+function SectorStatistics({ profile, scope }: { profile: PlantProfile; scope: PlantScope }) {
+  const equipment = equipmentForScope(profile, scope);
+  return (
+    <section className="pm-sector-statistics" aria-label={`${profile.label} statistical view`}>
+      <header>
+        <span className="pm-section-kicker">Sector operating snapshot</span>
+        <h2>{profile.label}</h2>
+      </header>
+      <div className="pm-sector-stat-cards">
+        {profile.stats.map(([label, value]) => (
+          <div key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+            <i />
+          </div>
+        ))}
+      </div>
+      <div className="pm-sector-equipment-table">
+        {equipment.map((item, index) => (
+          <div key={item}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <strong>{item}</strong>
+            <small>Operating normally</small>
+            <b>{88 + (index % 5) * 2}%</b>
+          </div>
+        ))}
+      </div>
+      <p>
+        Illustrative sector view. Detailed deterministic models will be activated per industry
+        implementation.
       </p>
     </section>
   );
@@ -656,12 +953,27 @@ function AssetDrawer({ asset, onClose }: { asset: Pm01AssetView | null; onClose:
 
 export function VirtualFactory() {
   const simulation = useFactorySimulation();
-  const [viewMode, setViewMode] = useState<"visual" | "data">("visual");
+  const [sectorId, setSectorId] = useState<(typeof PLANT_PROFILES)[number]["id"]>("chemical");
+  const [viewMode, setViewMode] = useState<"process" | "machinery" | "data">("process");
+  const [scope, setScope] = useState<PlantScope>("overall");
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const visualStageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const onFullscreenChange = () => setIsFullscreen(document.fullscreenElement !== null);
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+  const toggleFullscreen = async () => {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await visualStageRef.current?.requestFullscreen();
+  };
   const selectedAsset = useMemo(
     () => simulation.view.assets.find((asset) => asset.id === selectedAssetId) ?? null,
     [simulation.view.assets, selectedAssetId]
   );
+  const activeProfile =
+    PLANT_PROFILES.find((profile) => profile.id === sectorId) ?? PLANT_PROFILES[0];
   return (
     <div className="pm-factory-page">
       <header className="pm-factory-header">
@@ -673,7 +985,7 @@ export function VirtualFactory() {
             <span>Apex Specialty Chemicals Ltd.</span>
           </div>
           <h1>Virtual Factory</h1>
-          <p>Deterministic ASC-100 production · complete material flow · simulation data</p>
+          <p>Five industry landscapes · animated process maps · realistic machinery views</p>
         </div>
         <div className="pm-clock">
           <span>Simulation date / time</span>
@@ -684,14 +996,39 @@ export function VirtualFactory() {
           </small>
         </div>
       </header>
+      <section className="pm-sector-selector" aria-label="Choose plant industry">
+        {PLANT_PROFILES.map((profile, index) => (
+          <button
+            key={profile.id}
+            className={sectorId === profile.id ? "active" : ""}
+            aria-pressed={sectorId === profile.id}
+            onClick={() => {
+              setSectorId(profile.id);
+              setViewMode("process");
+              setScope("overall");
+            }}
+          >
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <strong>{profile.label}</strong>
+            <small>{profile.short}</small>
+          </button>
+        ))}
+      </section>
       <div className="pm-virtual-toolbar">
         <div className="pm-view-switcher" role="tablist" aria-label="Virtual Plant viewing mode">
           <button
             role="tab"
-            aria-selected={viewMode === "visual"}
-            onClick={() => setViewMode("visual")}
+            aria-selected={viewMode === "process"}
+            onClick={() => setViewMode("process")}
           >
-            <Factory size={15} /> Animated plant
+            <Workflow size={15} /> Diagrammatic process
+          </button>
+          <button
+            role="tab"
+            aria-selected={viewMode === "machinery"}
+            onClick={() => setViewMode("machinery")}
+          >
+            <ImageIcon size={15} /> Actual plant view
           </button>
           <button
             role="tab"
@@ -710,21 +1047,52 @@ export function VirtualFactory() {
           onSpeed={simulation.setSpeed}
         />
       </div>
-      {viewMode === "visual" ? (
-        <AnimatedPlantView view={simulation.view} onAsset={setSelectedAssetId} />
-      ) : (
-        <>
-          <KpiRail view={simulation.view} />
-          <ProductionTarget view={simulation.view} />
-          <ProcessMap view={simulation.view} onAsset={setSelectedAssetId} />
-          <div className="pm-lower-grid">
-            <InventoryPanel view={simulation.view} />
-            <BatchPanel view={simulation.view} />
-            <OeePanel view={simulation.view} />
-          </div>
-          <IntelligencePlaceholder />
-        </>
-      )}
+      <div className="pm-scope-switcher" role="tablist" aria-label="Plant section view">
+        {(Object.entries(SCOPE_LABELS) as [PlantScope, string][]).map(([id, label], index) => (
+          <button key={id} role="tab" aria-selected={scope === id} onClick={() => setScope(id)}>
+            <span>{index + 1}</span>
+            <strong>{label}</strong>
+          </button>
+        ))}
+      </div>
+      <div className="pm-visual-stage" ref={visualStageRef}>
+        <button
+          className="pm-fullscreen-button"
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? "Exit full screen" : "View plant visual full screen"}
+          title={isFullscreen ? "Exit full screen (Esc)" : "View full screen"}
+        >
+          {isFullscreen ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
+          <span>{isFullscreen ? "Exit full screen" : "Full screen"}</span>
+        </button>
+        {viewMode === "process" ? (
+          sectorId === "chemical" && scope === "overall" ? (
+            <AnimatedPlantView view={simulation.view} onAsset={setSelectedAssetId} />
+          ) : (
+            <SectorProcessView
+              profile={activeProfile}
+              running={simulation.view.run.status === "RUNNING"}
+              scope={scope}
+            />
+          )
+        ) : viewMode === "machinery" ? (
+          <MachineryView profile={activeProfile} scope={scope} />
+        ) : sectorId === "chemical" && scope === "overall" ? (
+          <>
+            <KpiRail view={simulation.view} />
+            <ProductionTarget view={simulation.view} />
+            <ProcessMap view={simulation.view} onAsset={setSelectedAssetId} />
+            <div className="pm-lower-grid">
+              <InventoryPanel view={simulation.view} />
+              <BatchPanel view={simulation.view} />
+              <OeePanel view={simulation.view} />
+            </div>
+            <IntelligencePlaceholder />
+          </>
+        ) : (
+          <SectorStatistics profile={activeProfile} scope={scope} />
+        )}
+      </div>
       <AssetDrawer asset={selectedAsset} onClose={() => setSelectedAssetId(null)} />
     </div>
   );
