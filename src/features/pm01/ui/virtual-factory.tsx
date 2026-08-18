@@ -34,6 +34,7 @@ import type { Pm01AssetView, Pm01DisplayStatus } from "../contracts/visualizatio
 import type { Pm01SimulationSpeed } from "../contracts/simulation";
 import { useFactorySimulation } from "../application/use-factory-simulation";
 import { Plant3dView } from "./plant-3d-view";
+import { PlantPanoramaTour } from "./plant-panorama-tour";
 
 const number = (value: number, digits = 1) =>
   new Intl.NumberFormat("en-IN", {
@@ -1277,13 +1278,17 @@ export function VirtualFactory() {
             onAsset={setSelectedAssetId}
           />
         ) : viewMode === "machinery" ? (
-          <MachineryView
-            key={`${activeProfile.id}-${scope}`}
-            profile={activeProfile}
-            scope={scope}
-            view={sectorId === "chemical" ? simulation.view : null}
-            onAsset={setSelectedAssetId}
-          />
+          sectorId === "chemical" ? (
+            <PlantPanoramaTour view={simulation.view} onAsset={setSelectedAssetId} />
+          ) : (
+            <MachineryView
+              key={`${activeProfile.id}-${scope}`}
+              profile={activeProfile}
+              scope={scope}
+              view={null}
+              onAsset={setSelectedAssetId}
+            />
+          )
         ) : sectorId === "chemical" && scope === "overall" ? (
           <>
             <KpiRail view={simulation.view} />
