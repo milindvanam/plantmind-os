@@ -92,56 +92,227 @@ export function Plant3dView({ industry, section, equipment, metrics }: Plant3dVi
       opacity: 0.28,
       roughness: 0.1
     });
-    const positions = equipment.map((_, index) => ({
-      x: (index % 4) * 5 - 7.5,
-      z: Math.floor(index / 4) * 7 - 3.5
-    }));
+    const hygienicSteel = new THREE.MeshStandardMaterial({
+      color: 0xd8e3e0,
+      metalness: 0.86,
+      roughness: 0.18
+    });
+    const concrete = new THREE.MeshStandardMaterial({
+      color: 0x52635e,
+      metalness: 0.08,
+      roughness: 0.82
+    });
+    const product = new THREE.MeshStandardMaterial({
+      color: 0xe9f7f3,
+      metalness: 0.12,
+      roughness: 0.52
+    });
+    const industryKey = industry.toLowerCase().includes("dairy")
+      ? "dairy"
+      : industry.toLowerCase().includes("sugar")
+        ? "sugar"
+        : industry.toLowerCase().includes("msme")
+          ? "msme"
+          : industry.toLowerCase().includes("clean-tech")
+            ? "clean-tech"
+            : "chemical";
+    const layouts: Record<string, readonly { x: number; z: number }[]> = {
+      dairy: [
+        { x: -8.5, z: -3.8 }, { x: -5.8, z: -3.8 }, { x: -2.5, z: -3.8 },
+        { x: 1, z: -3.8 }, { x: 4.5, z: -3.8 }, { x: 8, z: -3.8 },
+        { x: 4.8, z: 3.6 }, { x: 8.2, z: 3.6 }
+      ],
+      chemical: [
+        { x: -8, z: -4 }, { x: -3.7, z: -4 }, { x: 0, z: -3.5 },
+        { x: 4.2, z: -3.5 }, { x: 8, z: -3.5 }, { x: 7, z: 3.7 },
+        { x: 2.5, z: 3.7 }, { x: -4.5, z: 3.7 }
+      ],
+      msme: [
+        { x: -8, z: -3.8 }, { x: -4, z: -3.8 }, { x: 0, z: -3.8 },
+        { x: 4, z: -3.8 }, { x: 8, z: -3.8 }, { x: 5.5, z: 3.8 },
+        { x: 0.5, z: 3.8 }, { x: -5.5, z: 3.8 }
+      ],
+      "clean-tech": [
+        { x: -9, z: -4 }, { x: -6, z: -3 }, { x: -2.5, z: -3 },
+        { x: 1.5, z: -2.5 }, { x: 6, z: -2.5 }, { x: 8.5, z: 3.5 },
+        { x: 3.5, z: 4 }, { x: -4, z: 4 }
+      ],
+      sugar: [
+        { x: -9, z: -3.8 }, { x: -6, z: -3.8 }, { x: -2.5, z: -3.8 },
+        { x: 1, z: -3.8 }, { x: 4.5, z: -3.8 }, { x: 8, z: -3.8 },
+        { x: 4, z: 3.8 }, { x: -3, z: 3.8 }
+      ]
+    };
+    const positions = equipment.map((_, index) =>
+      layouts[industryKey]![index] ?? { x: (index % 4) * 5 - 7.5, z: Math.floor(index / 4) * 7 - 3.5 }
+    );
+
+    const addBox = (
+      unit: THREE.Group,
+      size: [number, number, number],
+      position: [number, number, number],
+      material: THREE.Material = darkSteel
+    ) => {
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size), material);
+      mesh.position.set(...position);
+      mesh.castShadow = true;
+      unit.add(mesh);
+      return mesh;
+    };
+    const addTank = (
+      unit: THREE.Group,
+      radius: number,
+      height: number,
+      position: [number, number, number],
+      horizontal = false,
+      material: THREE.Material = steel
+    ) => {
+      const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 28), material);
+      mesh.position.set(...position);
+      if (horizontal) mesh.rotation.z = Math.PI / 2;
+      mesh.castShadow = true;
+      unit.add(mesh);
+      return mesh;
+    };
+
+    const buildDairyUnit = (unit: THREE.Group, item: string) => {
+      if (/reception/i.test(item)) {
+        addBox(unit, [3.4, 0.22, 2.8], [0, 3.15, 0], product);
+        addBox(unit, [0.14, 3.1, 0.14], [-1.5, 1.55, -1.1], hygienicSteel);
+        addBox(unit, [0.14, 3.1, 0.14], [1.5, 1.55, -1.1], hygienicSteel);
+        addTank(unit, 0.72, 2.7, [0, 1.1, 0.2], true, hygienicSteel);
+        addBox(unit, [0.55, 0.55, 0.55], [-1.25, 0.35, 0.2], accent);
+        return 3.4;
+      }
+      if (/chill|storage/i.test(item) && !/cold/i.test(item)) {
+        [-0.75, 0.75].forEach((z) => {
+          addTank(unit, 0.72, 2.8, [0, 1.05, z], true, hygienicSteel);
+          addBox(unit, [0.15, 0.65, 0.15], [-0.85, 0.35, z], darkSteel);
+          addBox(unit, [0.15, 0.65, 0.15], [0.85, 0.35, z], darkSteel);
+        });
+        return 2.2;
+      }
+      if (/separation/i.test(item)) {
+        addTank(unit, 1.05, 0.85, [0, 1.05, 0], false, hygienicSteel);
+        const bowl = new THREE.Mesh(new THREE.ConeGeometry(0.92, 1.35, 28), hygienicSteel);
+        bowl.rotation.x = Math.PI;
+        bowl.position.y = 2.1;
+        bowl.castShadow = true;
+        unit.add(bowl);
+        addBox(unit, [1, 0.55, 0.72], [1.1, 0.55, 0], accent).userData.animated = true;
+        return 3;
+      }
+      if (/pasteur/i.test(item)) {
+        for (let plate = -5; plate <= 5; plate += 1) {
+          addBox(unit, [0.08, 2.5, 1.7], [plate * 0.16, 1.55, 0], plate % 2 ? accent : hygienicSteel);
+        }
+        addBox(unit, [2.4, 0.18, 2], [0, 0.25, 0], darkSteel);
+        return 3.1;
+      }
+      if (/homogen/i.test(item)) {
+        addBox(unit, [3, 0.28, 2], [0, 0.25, 0], darkSteel);
+        [-0.8, 0, 0.8].forEach((x) => addTank(unit, 0.42, 1.5, [x, 1.15, 0], true, hygienicSteel));
+        addBox(unit, [0.9, 0.9, 1.2], [1.3, 0.85, 0], accent).userData.animated = true;
+        return 2.1;
+      }
+      if (/filling/i.test(item)) {
+        addBox(unit, [3.6, 0.32, 1.25], [0, 0.68, 0], darkSteel);
+        for (let bottle = -4; bottle <= 4; bottle += 1) {
+          addTank(unit, 0.11, 0.7, [bottle * 0.38, 1.2, 0], false, product);
+        }
+        addBox(unit, [2.2, 2.3, 1.8], [0, 1.65, 0], glass);
+        return 3;
+      }
+      if (/cold/i.test(item)) {
+        addBox(unit, [4.2, 3.4, 3.4], [0, 1.75, 0], product);
+        addBox(unit, [1.2, 2.2, 0.12], [0, 1.2, 1.76], darkSteel);
+        [-1.25, 1.25].forEach((x) => addTank(unit, 0.42, 0.22, [x, 2.75, 1.76], true, accent));
+        return 3.7;
+      }
+      addBox(unit, [4.1, 1.1, 2.6], [0, 0.65, 0], concrete);
+      addBox(unit, [2.2, 1.7, 2.2], [0.65, 1.65, 0], product);
+      return 2.7;
+    };
+
+    const buildIndustrialUnit = (unit: THREE.Group, item: string, index: number) => {
+      if (industryKey === "msme") {
+        addBox(unit, [3.2, 0.25, 2.4], [0, 0.25, 0], concrete);
+        if (/press/i.test(item)) {
+          addBox(unit, [2.2, 2.8, 0.45], [0, 1.65, -0.8], darkSteel);
+          addBox(unit, [1.3, 0.45, 1.5], [0, 1.65, 0], accent).userData.animated = true;
+        } else if (/weld|robot/i.test(item)) {
+          addTank(unit, 0.25, 1.8, [0, 1.15, 0], false, accent).userData.animated = true;
+          addTank(unit, 0.2, 1.5, [0.65, 2.1, 0], true, accent);
+        } else {
+          addBox(unit, [2.6, 2.2, 2], [0, 1.35, 0], index % 2 ? glass : steel);
+          addBox(unit, [1.55, 0.8, 1.2], [0, 1.15, 1], accent).userData.animated = true;
+        }
+        return 3.2;
+      }
+      if (industryKey === "clean-tech") {
+        if (/conveyor|loader/i.test(item)) {
+          const belt = addBox(unit, [4.4, 0.25, 1], [0, 1.35, 0], darkSteel);
+          belt.rotation.z = 0.16;
+          addBox(unit, [4.2, 0.1, 0.74], [0, 1.58, 0], accent).rotation.z = 0.16;
+          return 2.5;
+        }
+        if (/absorber|silo/i.test(item)) {
+          addTank(unit, /absorber/i.test(item) ? 1.35 : 1, /absorber/i.test(item) ? 6.4 : 4.5, [0, /absorber/i.test(item) ? 3.3 : 2.35, 0], false, steel);
+          const cone = new THREE.Mesh(new THREE.ConeGeometry(/absorber/i.test(item) ? 1.35 : 1, 1, 28), steel);
+          cone.position.y = /absorber/i.test(item) ? 7 : 5.1;
+          unit.add(cone);
+          return /absorber/i.test(item) ? 7.4 : 5.5;
+        }
+        addBox(unit, [3.5, 3.5, 2.8], [0, 1.8, 0], index % 2 ? glass : concrete);
+        for (let cell = -1; cell <= 1; cell += 1) addBox(unit, [0.65, 2.5, 2.2], [cell * 0.9, 1.55, 0], accent);
+        return 4;
+      }
+      if (industryKey === "sugar") {
+        if (/yard|mill/i.test(item)) {
+          addBox(unit, [4, 0.35, 2.2], [0, 0.5, 0], darkSteel);
+          [-0.85, 0, 0.85].forEach((x) => addTank(unit, 0.5, 1.8, [x, 1.25, 0], true, steel).userData.animated = true);
+          return 2.2;
+        }
+        if (/evapor|cryst/i.test(item)) {
+          [-0.9, 0.9].forEach((x) => addTank(unit, 0.78, 4.4, [x, 2.3, 0], false, hygienicSteel));
+          return 4.8;
+        }
+        if (/bag/i.test(item)) {
+          addBox(unit, [4, 0.35, 1.3], [0, 0.7, 0], accent);
+          for (let bag = -3; bag <= 3; bag += 1) addBox(unit, [0.38, 0.65, 0.7], [bag * 0.52, 1.2, 0], product);
+          return 2;
+        }
+        addTank(unit, 1.25, 3.1, [0, 1.65, 0], false, steel);
+        return 3.6;
+      }
+      if (/tank|raw/i.test(item)) {
+        [-0.9, 0.9].forEach((x) => addTank(unit, 0.8, 3.6, [x, 1.9, 0], false, steel));
+        return 4;
+      }
+      if (/react|column|separ/i.test(item)) {
+        addTank(unit, 1.05, /column|separ/i.test(item) ? 6 : 4.6, [0, /column|separ/i.test(item) ? 3.1 : 2.4, 0], false, darkSteel);
+        for (let level = 1; level < 6; level += 1) {
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.06, 8, 28), accent);
+          ring.rotation.x = Math.PI / 2;
+          ring.position.y = level;
+          unit.add(ring);
+        }
+        return 6.5;
+      }
+      addBox(unit, [3.5, 2.8, 3], [0, 1.5, 0], glass);
+      addBox(unit, [3, 0.42, 0.72], [0, 1.05, 0], accent).userData.animated = true;
+      return 3.4;
+    };
 
     positions.forEach((position, index) => {
       const unit = new THREE.Group();
       unit.position.set(position.x, 0, position.z);
       unit.userData.index = index;
-      const variant = index % 4;
-      if (variant === 0) {
-        const tank = new THREE.Mesh(new THREE.CylinderGeometry(1.22, 1.22, 4.2, 32), steel);
-        tank.position.y = 2.25;
-        tank.castShadow = true;
-        unit.add(tank);
-        const cap = new THREE.Mesh(new THREE.ConeGeometry(1.22, 0.72, 32), steel);
-        cap.position.y = 4.72;
-        unit.add(cap);
-      } else if (variant === 1) {
-        const skid = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.65, 2.4), darkSteel);
-        skid.position.y = 1.05;
-        skid.castShadow = true;
-        unit.add(skid);
-        const rotor = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 2.7, 24), accent);
-        rotor.rotation.z = Math.PI / 2;
-        rotor.position.y = 2.15;
-        rotor.userData.animated = true;
-        unit.add(rotor);
-      } else if (variant === 2) {
-        const column = new THREE.Mesh(new THREE.CylinderGeometry(0.82, 0.96, 6.1, 28), steel);
-        column.position.y = 3.15;
-        column.castShadow = true;
-        unit.add(column);
-        for (let level = 1; level < 6; level += 1) {
-          const ring = new THREE.Mesh(new THREE.TorusGeometry(0.92, 0.06, 8, 28), accent);
-          ring.rotation.x = Math.PI / 2;
-          ring.position.y = level;
-          unit.add(ring);
-        }
-      } else {
-        const hall = new THREE.Mesh(new THREE.BoxGeometry(3.5, 2.8, 3), glass);
-        hall.position.y = 1.5;
-        hall.castShadow = true;
-        unit.add(hall);
-        const line = new THREE.Mesh(new THREE.BoxGeometry(3, 0.42, 0.72), accent);
-        line.position.y = 1.05;
-        unit.add(line);
-      }
+      const height = industryKey === "dairy"
+        ? buildDairyUnit(unit, equipment[index]!)
+        : buildIndustrialUnit(unit, equipment[index]!, index);
       const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 16), accent);
-      beacon.position.set(0, variant === 2 ? 6.45 : 5.2, 0);
+      beacon.position.set(0, height + 0.25, 0);
       unit.add(beacon);
       plant.add(unit);
     });
