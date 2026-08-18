@@ -8,6 +8,12 @@ test("PM-01 factory route operates from simulation state", async ({ page }) => {
     "aria-current",
     "page"
   );
+  await expect(page.getByRole("tab", { name: "Animated plant" })).toHaveAttribute(
+    "aria-selected",
+    "true"
+  );
+  await expect(page.getByRole("heading", { name: "ASC-100 manufacturing line" })).toBeVisible();
+  await page.getByRole("tab", { name: "Statistical view" }).click();
   await expect(page.getByRole("heading", { name: "Raw materials to dispatch" })).toBeVisible();
   await page.getByRole("button", { name: "1000×" }).click();
   await page.getByRole("button", { name: /Play/ }).click();
@@ -19,6 +25,7 @@ test("PM-01 factory route operates from simulation state", async ({ page }) => {
 
 test("PM-01 asset drill-down exposes observable tags only", async ({ page }) => {
   await page.goto("/virtual-plant");
+  await page.getByRole("tab", { name: "Statistical view" }).click();
   await page.getByRole("button", { name: "Reaction: R-301 thermal loop" }).click();
   await expect(page.getByRole("dialog", { name: /R-301/ })).toBeVisible();
   await expect(page.getByText("Observable measurements")).toBeVisible();
@@ -29,6 +36,7 @@ test("PM-01 asset drill-down exposes observable tags only", async ({ page }) => 
 test("PM-01 topology remains usable on a compact presentation viewport", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
   await page.goto("/virtual-plant");
+  await page.getByRole("tab", { name: "Statistical view" }).click();
   await expect(page.getByRole("heading", { name: "Raw materials to dispatch" })).toBeVisible();
   await expect(page.locator(".pm-process-scroll")).toBeVisible();
   await expect(

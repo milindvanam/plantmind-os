@@ -20,9 +20,13 @@ describe("application shell", () => {
     expect(screen.getAllByText("Executive Viewer").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("navigation", { name: "Primary navigation" }).querySelectorAll("a")
-    ).toHaveLength(11);
-    expect(screen.getByRole("link", { name: "Briefing" })).toHaveAttribute("href", "/briefing");
-    expect(screen.getByRole("link", { name: "Real Data Lab" })).toHaveAttribute(
+    ).toHaveLength(10);
+    expect(screen.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/overview");
+    expect(screen.getByRole("link", { name: "Executive Brief" })).toHaveAttribute(
+      "href",
+      "/briefing"
+    );
+    expect(screen.getByRole("link", { name: "Data & Integrations" })).toHaveAttribute(
       "href",
       "/real-data"
     );

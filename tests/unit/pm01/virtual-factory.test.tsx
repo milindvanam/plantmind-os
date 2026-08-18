@@ -10,10 +10,16 @@ function productionValue() {
   return within(rail).getByText("Production today").parentElement?.textContent ?? "";
 }
 
+function openStatisticalView() {
+  fireEvent.click(screen.getByRole("tab", { name: "Statistical view" }));
+}
+
 describe("PM-01 virtual factory", () => {
   it("renders the complete process topology and honest intelligence placeholder", () => {
     render(<VirtualFactory />);
     expect(screen.getByRole("heading", { level: 1, name: "Virtual Factory" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "ASC-100 manufacturing line" })).toBeVisible();
+    openStatisticalView();
     for (const stage of [
       "Receiving",
       "Tank farm",
@@ -32,6 +38,7 @@ describe("PM-01 virtual factory", () => {
 
   it("plays, pauses, changes speed and resets the deterministic factory", () => {
     render(<VirtualFactory />);
+    openStatisticalView();
     expect(productionValue()).toContain("0.0");
     fireEvent.click(screen.getByRole("button", { name: "1000×" }));
     fireEvent.click(screen.getByRole("button", { name: /Play/ }));
@@ -50,6 +57,7 @@ describe("PM-01 virtual factory", () => {
 
   it("opens observable asset details without ground-truth fields", () => {
     render(<VirtualFactory />);
+    openStatisticalView();
     fireEvent.click(screen.getByRole("button", { name: "Reaction: R-301 thermal loop" }));
     expect(screen.getByRole("dialog", { name: /R-301/ })).toBeVisible();
     expect(screen.getByText("Observable measurements")).toBeVisible();

@@ -33,9 +33,15 @@ test("Executive Dashboard presents priority, provenance and explicit unavailable
   );
 });
 
-test("primary navigation reaches all six routes", async ({ page }) => {
+test("primary navigation reaches the visible operational journey", async ({ page }) => {
   await page.goto("/command");
-  for (const [route] of routes.slice(1)) {
+  for (const route of [
+    "/virtual-plant",
+    "/operations",
+    "/assets/P-204A",
+    "/investigations/INV-204",
+    "/interventions/ACT-204"
+  ]) {
     await page.locator(`a[href="${route}"]`).first().click();
     await expect(page).toHaveURL(new RegExp(route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
   }

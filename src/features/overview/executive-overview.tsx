@@ -10,7 +10,6 @@ import {
   Check,
   CircleDollarSign,
   Database,
-  Factory,
   Gauge,
   Network,
   ShieldCheck,
@@ -27,29 +26,37 @@ const chapters = [
   { number: "07", label: "The invitation" }
 ] as const;
 
-function FragmentedSystems() {
+function MarketContextVisual() {
   return (
-    <div className="overview-visual systems-visual" aria-hidden="true">
-      <div className="system-core">
-        <Factory />
-        <strong>PLANT</strong>
-        <span>Operating reality</span>
+    <div className="overview-visual market-context-visual" aria-hidden="true">
+      <div className="market-hero-stat">
+        <span>THE COMPETITIVE SHIFT</span>
+        <strong>92%</strong>
+        <p>of manufacturing leaders say smart manufacturing will drive competitiveness.</p>
       </div>
-      {[
-        ["SCADA", "8,420 tags"],
-        ["SAP", "1,284 records"],
-        ["CMMS", "312 orders"],
-        ["SOPs", "96 documents"]
-      ].map(([name, detail], i) => (
-        <div className={`orbit-system orbit-${i + 1}`} key={name}>
-          <Database />
-          <strong>{name}</strong>
-          <span>{detail}</span>
+      <div className="market-outcomes">
+        <div>
+          <span>REALIZED OUTPUT UPLIFT</span>
+          <strong>10–20%</strong>
+          <i />
         </div>
-      ))}
-      <div className="signal signal-a" />
-      <div className="signal signal-b" />
-      <div className="signal signal-c" />
+        <div>
+          <span>CAPACITY UNLOCKED</span>
+          <strong>10–15%</strong>
+          <i />
+        </div>
+      </div>
+      <div className="market-system-rail">
+        {["SCADA", "SAP", "CMMS", "SOPs"].map((name) => (
+          <span key={name}>
+            <Database /> {name}
+          </span>
+        ))}
+        <b>Context remains fragmented</b>
+      </div>
+      <small className="market-source">
+        Deloitte 2025 Smart Manufacturing Survey · 600 executives
+      </small>
     </div>
   );
 }
@@ -218,9 +225,9 @@ function PilotVisual() {
 const slides = [
   {
     eyebrow: "Industrial operations are data-rich",
-    title: "But critical decisions still arrive fragmented.",
-    body: "SCADA sees the process. SAP sees maintenance. Documents hold procedure. Experts carry context. Leadership still has to assemble the truth under pressure.",
-    visual: <FragmentedSystems />
+    title: "The value is proven. The decision gap remains.",
+    body: "Industry is investing for measurable output and capacity gains. Yet SCADA, SAP, maintenance history and expert context still reach leadership as separate pieces.",
+    visual: <MarketContextVisual />
   },
   {
     eyebrow: "PlantMind OS",
@@ -296,7 +303,7 @@ export function ExecutiveOverview() {
           </Link>
         </div>
       </header>
-      <section className="overview-stage" key={active}>
+      <section className={`overview-stage overview-stage-${active + 1}`} key={active}>
         <div className="overview-copy">
           <span className="overview-chapter">
             {chapter.number} · {chapter.label}

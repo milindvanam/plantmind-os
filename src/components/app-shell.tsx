@@ -15,11 +15,9 @@ import {
   Factory,
   FileSearch,
   Gauge,
-  Layers3,
   Menu,
   PanelLeftClose,
   Sparkles,
-  Unplug,
   UserRound,
   X
 } from "lucide-react";
@@ -29,17 +27,20 @@ import { ScenarioControls } from "@/features/scenario/scenario-controls";
 import { ScenarioProvider } from "@/features/scenario/scenario-provider";
 
 const navItems = [
-  { href: "/briefing", label: "Briefing", icon: BookOpenText, permission: "Private preview" },
-  { href: "/in-action", label: "In Action", icon: Layers3, permission: "Private preview" },
-  { href: "/connect", label: "Connect", icon: Unplug, permission: "Private preview" },
-  { href: "/real-data", label: "Real Data Lab", icon: Database, permission: "All demo roles" },
-  { href: "/virtual-plant", label: "Virtual Plant", icon: Factory, permission: "All demo roles" },
+  { href: "/overview", label: "Overview", icon: Sparkles, permission: "Private preview" },
+  {
+    href: "/briefing",
+    label: "Executive Brief",
+    icon: BookOpenText,
+    permission: "Private preview"
+  },
   {
     href: "/command",
     label: "Executive Command",
     icon: Gauge,
     permission: "Executive + Operations"
   },
+  { href: "/virtual-plant", label: "Virtual Plant", icon: Factory, permission: "All demo roles" },
   { href: "/operations", label: "Plant Operations", icon: Factory, permission: "All demo roles" },
   {
     href: "/assets/P-204A",
@@ -49,27 +50,33 @@ const navItems = [
   },
   {
     href: "/investigations/INV-204",
-    label: "Copilot Investigation",
+    label: "Investigation & Decision",
     icon: FileSearch,
     permission: "Reliability + Operations"
-  },
-  {
-    href: "/executives/INV-204",
-    label: "Executive Briefs",
-    icon: Sparkles,
-    permission: "Executive + Plant Head"
   },
   {
     href: "/interventions/ACT-204",
     label: "Approval & Outcome",
     icon: ClipboardCheck,
     permission: "Plant Head approval"
+  },
+  {
+    href: "/real-data",
+    label: "Data & Integrations",
+    icon: Database,
+    permission: "All demo roles"
+  },
+  {
+    href: "/in-action",
+    label: "Industry Solutions",
+    icon: Building2,
+    permission: "Private preview"
   }
 ] as const;
 
 function Logo() {
   return (
-    <Link href="/command" className="logo" aria-label="PlantMind home">
+    <Link href="/overview" className="logo" aria-label="PlantMind home">
       <span className="logo-mark">
         <span />
       </span>
@@ -85,7 +92,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   return (
     <nav className="primary-nav" aria-label="Primary navigation">
-      {navItems.map(({ href, label, icon: Icon, permission }) => {
+      {navItems.map(({ href, label, icon: Icon, permission }, index) => {
         const active =
           pathname === href || (href !== "/command" && pathname.startsWith(`${href}/`));
         return (
@@ -93,10 +100,12 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
             key={href}
             href={href as Route}
             className={active ? "nav-item active" : "nav-item"}
+            aria-label={label}
             aria-current={active ? "page" : undefined}
             onClick={onNavigate}
             title={permission}
           >
+            <small>{String(index + 1).padStart(2, "0")}</small>
             <Icon size={18} />
             <span>{label}</span>
           </Link>

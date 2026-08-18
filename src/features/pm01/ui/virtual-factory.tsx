@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   Activity,
+  BarChart3,
   Box,
   ChevronRight,
   CircleGauge,
@@ -130,6 +131,115 @@ function KpiRail({ view }: { view: ReturnType<typeof useFactorySimulation>["view
           </strong>
         </div>
       ))}
+    </section>
+  );
+}
+
+function AnimatedPlantView({
+  view,
+  onAsset
+}: {
+  view: ReturnType<typeof useFactorySimulation>["view"];
+  onAsset: (assetId: string) => void;
+}) {
+  const stages = [0, 2, 3, 4, 5, 6, 8, 9]
+    .map((index) => view.processNodes[index])
+    .filter((node): node is (typeof view.processNodes)[number] => Boolean(node));
+  const machinery = [
+    "tank",
+    "feed",
+    "reactor",
+    "separator",
+    "dryer",
+    "packager",
+    "warehouse",
+    "dispatch"
+  ];
+  return (
+    <section
+      className={`pm-plant-visual ${view.run.status === "RUNNING" ? "is-running" : "is-paused"}`}
+      aria-labelledby="animated-plant-title"
+    >
+      <header>
+        <div>
+          <span className="pm-section-kicker">Live visual layer · observable simulation data</span>
+          <h2 id="animated-plant-title">ASC-100 manufacturing line</h2>
+        </div>
+        <div className="pm-visual-live-state">
+          <span>
+            <i /> {view.run.status}
+          </span>
+          <strong>{number(view.kpis.productionRateTonnesPerDay)} T/day</strong>
+        </div>
+      </header>
+      <div className="pm-plant-scene">
+        <div className="pm-scene-skyline" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="pm-scene-pipe" aria-hidden="true">
+          {Array.from({ length: 9 }, (_, index) => (
+            <i key={index} />
+          ))}
+        </div>
+        <div className="pm-machinery-line">
+          {stages.map((node, index) => {
+            const assetId = node.assetIds[0];
+            return (
+              <button
+                key={node.id}
+                className={`pm-machine pm-machine-${machinery[index]} ${node.active ? "active" : ""}`}
+                onClick={() => assetId && onAsset(assetId)}
+                disabled={!assetId}
+                aria-label={`${node.title}, ${number(node.throughputTonnesPerHour, 2)} tonnes per hour`}
+              >
+                <span className="pm-machine-art" aria-hidden="true">
+                  <i className="pm-machine-body" />
+                  <i className="pm-machine-motion" />
+                  <i className="pm-machine-signal" />
+                </span>
+                <span className="pm-machine-data">
+                  <small>{node.title}</small>
+                  <strong>
+                    {number(node.throughputTonnesPerHour, 2)} <b>T/h</b>
+                  </strong>
+                  <em>{number(node.inventoryTonnes)} T held</em>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="pm-scene-utilities">
+          {view.utilities.map((utility) => (
+            <button key={utility.id} onClick={() => onAsset(utility.assetId)}>
+              <span>{utility.label}</span>
+              <strong>
+                {number(utility.value)} <small>{utility.unit}</small>
+              </strong>
+            </button>
+          ))}
+        </div>
+        <div className="pm-scene-summary">
+          <span>
+            Batch <strong>{view.batches[0]?.id ?? "—"}</strong>
+          </span>
+          <span>
+            OEE <strong>{percent(view.kpis.oee.oee)}</strong>
+          </span>
+          <span>
+            Energy{" "}
+            <strong>
+              {view.kpis.energyPerTonne === null ? "—" : number(view.kpis.energyPerTonne)} kWh-eq/T
+            </strong>
+          </span>
+        </div>
+      </div>
+      <p className="pm-visual-boundary">
+        Animated operating view derived only from observable process state. Select equipment to
+        inspect its current tags.
+      </p>
     </section>
   );
 }
@@ -546,6 +656,7 @@ function AssetDrawer({ asset, onClose }: { asset: Pm01AssetView | null; onClose:
 
 export function VirtualFactory() {
   const simulation = useFactorySimulation();
+  const [viewMode, setViewMode] = useState<"visual" | "data">("visual");
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const selectedAsset = useMemo(
     () => simulation.view.assets.find((asset) => asset.id === selectedAssetId) ?? null,
@@ -573,23 +684,47 @@ export function VirtualFactory() {
           </small>
         </div>
       </header>
-      <SimulationControls
-        status={simulation.view.run.status}
-        speed={simulation.view.run.speed}
-        onPlay={simulation.play}
-        onPause={simulation.pause}
-        onReset={simulation.reset}
-        onSpeed={simulation.setSpeed}
-      />
-      <KpiRail view={simulation.view} />
-      <ProductionTarget view={simulation.view} />
-      <ProcessMap view={simulation.view} onAsset={setSelectedAssetId} />
-      <div className="pm-lower-grid">
-        <InventoryPanel view={simulation.view} />
-        <BatchPanel view={simulation.view} />
-        <OeePanel view={simulation.view} />
+      <div className="pm-virtual-toolbar">
+        <div className="pm-view-switcher" role="tablist" aria-label="Virtual Plant viewing mode">
+          <button
+            role="tab"
+            aria-selected={viewMode === "visual"}
+            onClick={() => setViewMode("visual")}
+          >
+            <Factory size={15} /> Animated plant
+          </button>
+          <button
+            role="tab"
+            aria-selected={viewMode === "data"}
+            onClick={() => setViewMode("data")}
+          >
+            <BarChart3 size={15} /> Statistical view
+          </button>
+        </div>
+        <SimulationControls
+          status={simulation.view.run.status}
+          speed={simulation.view.run.speed}
+          onPlay={simulation.play}
+          onPause={simulation.pause}
+          onReset={simulation.reset}
+          onSpeed={simulation.setSpeed}
+        />
       </div>
-      <IntelligencePlaceholder />
+      {viewMode === "visual" ? (
+        <AnimatedPlantView view={simulation.view} onAsset={setSelectedAssetId} />
+      ) : (
+        <>
+          <KpiRail view={simulation.view} />
+          <ProductionTarget view={simulation.view} />
+          <ProcessMap view={simulation.view} onAsset={setSelectedAssetId} />
+          <div className="pm-lower-grid">
+            <InventoryPanel view={simulation.view} />
+            <BatchPanel view={simulation.view} />
+            <OeePanel view={simulation.view} />
+          </div>
+          <IntelligencePlaceholder />
+        </>
+      )}
       <AssetDrawer asset={selectedAsset} onClose={() => setSelectedAssetId(null)} />
     </div>
   );

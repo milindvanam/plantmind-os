@@ -4,7 +4,7 @@ test.describe("executive overview", () => {
   test("root enters the seven-chapter overview before the product", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveURL(/\/overview$/);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("critical decisions");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("decision gap");
     await expect(
       page.getByRole("navigation", { name: "Overview chapters" }).getByRole("button")
     ).toHaveCount(7);
@@ -27,7 +27,7 @@ test.describe("executive overview", () => {
     await page.getByRole("button", { name: "Next chapter" }).click();
     await expect(page.getByRole("heading", { level: 1 })).toContainText("intelligence layer");
     await page.keyboard.press("ArrowLeft");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("critical decisions");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("decision gap");
     await page.keyboard.press("ArrowRight");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("intelligence layer");
     await expect(page.getByRole("button", { name: "Previous chapter" })).toBeEnabled();
