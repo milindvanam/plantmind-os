@@ -1217,7 +1217,7 @@ export function VirtualFactory() {
               >
                 <option value="process">Diagrammatic process</option>
                 <option value="model3d">Actual plant · interactive 3D</option>
-                <option value="machinery">Site imagery</option>
+                <option value="machinery">Take a Tour · Site imagery</option>
                 <option value="data">Statistical view</option>
               </select>
             </label>

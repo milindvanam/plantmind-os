@@ -4527,6 +4527,19 @@ td {
   font-weight: 750;
   text-overflow: ellipsis;
   cursor: pointer;
+  color-scheme: dark;
+}
+.pm-industry-select select option {
+  color: #f2f7f4;
+  background: #101918;
+  font-weight: 650;
+}
+:root[data-theme="light"] .pm-industry-select select {
+  color-scheme: light;
+}
+:root[data-theme="light"] .pm-industry-select select option {
+  color: #13211e;
+  background: #ffffff;
 }
 .pm-view-switcher {
   width: 100%;
