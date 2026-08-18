@@ -63,22 +63,21 @@ test("Virtual Plant switches industry, plant scope, and visual layer", async ({ 
 
   await section.selectOption("input");
   await expect(page.getByRole("region", { name: /Dairy Plant Raw material/ })).toBeVisible();
-  await view.selectOption("machinery");
-  const machinery = page.getByRole("region", { name: /Dairy Plant Raw material.*machinery/ });
-  await expect(machinery).toBeVisible();
-  await expect(page.getByAltText(/Dairy Plant machinery/)).toBeVisible();
-  await expect(machinery).toContainText("Milk receiving");
-  await expect(machinery).toContainText("Incoming QC");
-  await page.getByRole("button", { name: "Zoom in" }).click();
-  await expect(page.getByText("160%", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Walk-through view" }).click();
-  await expect(page.getByRole("button", { name: "Exit walk-through" })).toHaveAttribute(
+  await view.selectOption("model3d");
+  const model = page.getByRole("region", { name: /Dairy Plant Raw material.*interactive 3D/ });
+  await expect(model).toBeVisible();
+  await expect(page.getByLabel("Interactive 3D plant model")).toBeVisible();
+  await expect(model).toContainText("Milk receiving");
+  await expect(model).toContainText("Incoming QC");
+  await page.getByRole("button", { name: "Zoom 3D model in" }).click();
+  await page.getByRole("button", { name: "Walkaround" }).click();
+  await expect(page.getByRole("button", { name: "Exit walkaround" })).toHaveAttribute(
     "aria-pressed",
     "true"
   );
 
   await section.selectOption("output");
   await expect(
-    page.getByRole("region", { name: /Dairy Plant Finished goods.*machinery/ })
+    page.getByRole("region", { name: /Dairy Plant Finished goods.*interactive 3D/ })
   ).toBeVisible();
 });

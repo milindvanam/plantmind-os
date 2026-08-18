@@ -34,6 +34,7 @@ import {
 import type { Pm01AssetView, Pm01DisplayStatus } from "../contracts/visualization";
 import type { Pm01SimulationSpeed } from "../contracts/simulation";
 import { useFactorySimulation } from "../application/use-factory-simulation";
+import { Plant3dView } from "./plant-3d-view";
 
 const number = (value: number, digits = 1) =>
   new Intl.NumberFormat("en-IN", {
@@ -362,7 +363,7 @@ function AnimatedPlantView({
 
 type PlantProfile = (typeof PLANT_PROFILES)[number];
 type PlantScope = "overall" | "input" | "process" | "output";
-type PlantViewMode = "process" | "machinery" | "data";
+type PlantViewMode = "process" | "model3d" | "machinery" | "data";
 
 const SCOPE_LABELS: Record<PlantScope, string> = {
   overall: "Overall plant · A–Z",
@@ -1130,6 +1131,10 @@ export function VirtualFactory() {
   );
   const activeProfile =
     PLANT_PROFILES.find((profile) => profile.id === sectorId) ?? PLANT_PROFILES[0];
+  const activeEquipment = useMemo(
+    () => equipmentForScope(activeProfile, scope),
+    [activeProfile, scope]
+  );
   return (
     <div className="pm-factory-page">
       <header className="pm-factory-header">
@@ -1181,7 +1186,8 @@ export function VirtualFactory() {
                 onChange={(event) => setViewMode(event.target.value as PlantViewMode)}
               >
                 <option value="process">Diagrammatic process</option>
-                <option value="machinery">Actual plant view</option>
+                <option value="model3d">Actual plant · interactive 3D</option>
+                <option value="machinery">Site imagery</option>
                 <option value="data">Statistical view</option>
               </select>
             </label>
@@ -1230,6 +1236,13 @@ export function VirtualFactory() {
               scope={scope}
             />
           )
+        ) : viewMode === "model3d" ? (
+          <Plant3dView
+            industry={activeProfile.label}
+            section={SCOPE_LABELS[scope]}
+            equipment={activeEquipment}
+            metrics={SCOPE_METRICS[activeProfile.id][scope]}
+          />
         ) : viewMode === "machinery" ? (
           <MachineryView
             key={`${activeProfile.id}-${scope}`}

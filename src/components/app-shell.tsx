@@ -266,7 +266,10 @@ function ShellContent({ children }: { children: React.ReactNode }) {
             <ScenarioControls />
           </div>
         )}
-        <main id="main-content" className="main-content">
+        <main
+          id="main-content"
+          className={virtualPlantMode ? "main-content virtual-plant-main" : "main-content"}
+        >
           {children}
         </main>
       </div>

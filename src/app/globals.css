@@ -2493,6 +2493,11 @@ button:disabled {
   margin: 0 auto;
   padding: 30px clamp(20px, 3vw, 46px) 56px;
 }
+.main-content.virtual-plant-main {
+  width: 100%;
+  max-width: none;
+  padding: 8px clamp(12px, 1.5vw, 24px) 28px;
+}
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -3473,6 +3478,162 @@ td {
   border: 1px solid var(--border);
   border-radius: 16px;
   background: var(--surface-1);
+}
+.pm-3d-view {
+  min-height: calc(100vh - 188px);
+  position: relative;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: #eff8f4;
+  background: #06110e;
+}
+.pm-3d-view > canvas {
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 188px);
+  display: block;
+  cursor: grab;
+}
+.pm-3d-view > canvas:active {
+  cursor: grabbing;
+}
+.pm-3d-view > header {
+  position: absolute;
+  z-index: 4;
+  left: 22px;
+  top: 20px;
+  pointer-events: none;
+}
+.pm-3d-view > header span {
+  color: var(--accent);
+  font: 8px var(--font-mono);
+  letter-spacing: 0.09em;
+}
+.pm-3d-view > header h2 {
+  margin: 5px 0 2px;
+  font-size: 24px;
+}
+.pm-3d-view > header p {
+  margin: 0;
+  color: #8ba198;
+  font-size: 9px;
+}
+.pm-3d-controls {
+  position: absolute;
+  z-index: 5;
+  right: 16px;
+  top: 66px;
+  padding: 5px;
+  display: flex;
+  gap: 4px;
+  border: 1px solid rgba(117, 224, 179, 0.3);
+  border-radius: 8px;
+  background: rgba(5, 16, 12, 0.86);
+  backdrop-filter: blur(9px);
+}
+.pm-3d-controls button {
+  min-height: 30px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(117, 224, 179, 0.22);
+  border-radius: 5px;
+  color: #dff8ee;
+  background: #0b211a;
+  font-size: 8px;
+  cursor: pointer;
+}
+.pm-3d-controls button:hover,
+.pm-3d-controls button.active {
+  color: #06150f;
+  background: var(--accent);
+}
+.pm-3d-equipment {
+  position: absolute;
+  z-index: 4;
+  left: 16px;
+  top: 112px;
+  width: 190px;
+  display: grid;
+  gap: 4px;
+}
+.pm-3d-equipment button {
+  min-width: 0;
+  padding: 6px 8px;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(117, 224, 179, 0.13);
+  border-radius: 6px;
+  color: #a7bbb3;
+  text-align: left;
+  background: rgba(5, 16, 12, 0.7);
+  backdrop-filter: blur(7px);
+  cursor: pointer;
+}
+.pm-3d-equipment button.active {
+  color: #f1faf6;
+  border-color: var(--accent);
+  background: rgba(15, 52, 40, 0.9);
+}
+.pm-3d-equipment i {
+  color: var(--accent);
+  font: 8px var(--font-mono);
+}
+.pm-3d-equipment span {
+  overflow: hidden;
+  display: grid;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-3d-equipment small {
+  color: #718a80;
+  font-size: 6px;
+}
+.pm-3d-metrics {
+  position: absolute;
+  z-index: 4;
+  left: auto;
+  right: 16px;
+  top: 112px;
+  bottom: auto;
+  width: 220px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+.pm-3d-metrics article {
+  position: relative;
+  padding: 10px 13px 12px;
+  overflow: hidden;
+  display: grid;
+  border: 1px solid rgba(117, 224, 179, 0.22);
+  border-radius: 7px;
+  background: rgba(5, 16, 12, 0.82);
+  backdrop-filter: blur(9px);
+}
+.pm-3d-metrics span {
+  color: #8ca299;
+  font-size: 7px;
+  text-transform: uppercase;
+}
+.pm-3d-metrics strong {
+  margin-top: 3px;
+  color: #ecfff7;
+  font: 15px var(--font-mono);
+}
+.pm-3d-metrics i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
 }
 .pm-visual-stage {
   position: relative;
@@ -5280,6 +5441,20 @@ td {
     right: 12px;
     top: 90px;
     flex-wrap: wrap;
+  }
+  .pm-3d-view,
+  .pm-3d-view > canvas {
+    min-height: 680px;
+  }
+  .pm-3d-controls {
+    left: 12px;
+    right: 12px;
+    top: 78px;
+    flex-wrap: wrap;
+  }
+  .pm-3d-equipment {
+    top: 150px;
+    width: 160px;
   }
   .pm-sector-stat-cards,
   .pm-machinery-photo > footer {
