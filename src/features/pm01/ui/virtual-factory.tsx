@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
-  BarChart3,
   Box,
   ChevronRight,
   CircleGauge,
@@ -13,7 +12,6 @@ import {
   Flame,
   FlaskConical,
   Gauge,
-  Image as ImageIcon,
   Maximize2,
   Minimize2,
   Minus,
@@ -27,7 +25,6 @@ import {
   Plus,
   RotateCcw,
   Sparkles,
-  Workflow,
   Truck,
   Warehouse,
   Wind,
@@ -365,6 +362,7 @@ function AnimatedPlantView({
 
 type PlantProfile = (typeof PLANT_PROFILES)[number];
 type PlantScope = "overall" | "input" | "process" | "output";
+type PlantViewMode = "process" | "machinery" | "data";
 
 const SCOPE_LABELS: Record<PlantScope, string> = {
   overall: "Overall plant · A–Z",
@@ -1112,7 +1110,7 @@ function AssetDrawer({ asset, onClose }: { asset: Pm01AssetView | null; onClose:
 export function VirtualFactory() {
   const simulation = useFactorySimulation();
   const [sectorId, setSectorId] = useState<(typeof PLANT_PROFILES)[number]["id"]>("chemical");
-  const [viewMode, setViewMode] = useState<"process" | "machinery" | "data">("process");
+  const [viewMode, setViewMode] = useState<PlantViewMode>("process");
   const [scope, setScope] = useState<PlantScope>("overall");
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -1173,29 +1171,32 @@ export function VirtualFactory() {
             ))}
           </select>
         </label>
-        <div className="pm-view-switcher" role="tablist" aria-label="Virtual Plant viewing mode">
-          <button
-            role="tab"
-            aria-selected={viewMode === "process"}
-            onClick={() => setViewMode("process")}
+        <label className="pm-industry-select pm-view-select">
+          <span>View</span>
+          <select
+            aria-label="Choose plant view"
+            value={viewMode}
+            onChange={(event) => setViewMode(event.target.value as PlantViewMode)}
           >
-            <Workflow size={15} /> Diagrammatic process
-          </button>
-          <button
-            role="tab"
-            aria-selected={viewMode === "machinery"}
-            onClick={() => setViewMode("machinery")}
+            <option value="process">Diagrammatic process</option>
+            <option value="machinery">Actual plant view</option>
+            <option value="data">Statistical view</option>
+          </select>
+        </label>
+        <label className="pm-industry-select pm-section-select">
+          <span>Plant section</span>
+          <select
+            aria-label="Choose plant section"
+            value={scope}
+            onChange={(event) => setScope(event.target.value as PlantScope)}
           >
-            <ImageIcon size={15} /> Actual plant view
-          </button>
-          <button
-            role="tab"
-            aria-selected={viewMode === "data"}
-            onClick={() => setViewMode("data")}
-          >
-            <BarChart3 size={15} /> Statistical view
-          </button>
-        </div>
+            {(Object.entries(SCOPE_LABELS) as [PlantScope, string][]).map(([id, label]) => (
+              <option key={id} value={id}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
         <SimulationControls
           status={simulation.view.run.status}
           speed={simulation.view.run.speed}
@@ -1204,14 +1205,6 @@ export function VirtualFactory() {
           onReset={simulation.reset}
           onSpeed={simulation.setSpeed}
         />
-      </div>
-      <div className="pm-scope-switcher" role="tablist" aria-label="Plant section view">
-        {(Object.entries(SCOPE_LABELS) as [PlantScope, string][]).map(([id, label], index) => (
-          <button key={id} role="tab" aria-selected={scope === id} onClick={() => setScope(id)}>
-            <span>{index + 1}</span>
-            <strong>{label}</strong>
-          </button>
-        ))}
       </div>
       <div className="pm-visual-stage" ref={visualStageRef}>
         <button

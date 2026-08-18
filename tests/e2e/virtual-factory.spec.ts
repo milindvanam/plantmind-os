@@ -8,12 +8,10 @@ test("PM-01 factory route operates from simulation state", async ({ page }) => {
     "aria-current",
     "page"
   );
-  await expect(page.getByRole("tab", { name: "Diagrammatic process" })).toHaveAttribute(
-    "aria-selected",
-    "true"
-  );
+  const view = page.getByRole("combobox", { name: "Choose plant view" });
+  await expect(view).toHaveValue("process");
   await expect(page.getByRole("heading", { name: "ASC-100 manufacturing line" })).toBeVisible();
-  await page.getByRole("tab", { name: "Statistical view" }).click();
+  await view.selectOption("data");
   await expect(page.getByRole("heading", { name: "Raw materials to dispatch" })).toBeVisible();
   await page.getByRole("button", { name: "1000×" }).click();
   await page.getByRole("button", { name: /Play/ }).click();
@@ -25,7 +23,7 @@ test("PM-01 factory route operates from simulation state", async ({ page }) => {
 
 test("PM-01 asset drill-down exposes observable tags only", async ({ page }) => {
   await page.goto("/virtual-plant");
-  await page.getByRole("tab", { name: "Statistical view" }).click();
+  await page.getByRole("combobox", { name: "Choose plant view" }).selectOption("data");
   await page.getByRole("button", { name: "Reaction: R-301 thermal loop" }).click();
   await expect(page.getByRole("dialog", { name: /R-301/ })).toBeVisible();
   await expect(page.getByText("Observable measurements")).toBeVisible();
@@ -36,7 +34,7 @@ test("PM-01 asset drill-down exposes observable tags only", async ({ page }) => 
 test("PM-01 topology remains usable on a compact presentation viewport", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
   await page.goto("/virtual-plant");
-  await page.getByRole("tab", { name: "Statistical view" }).click();
+  await page.getByRole("combobox", { name: "Choose plant view" }).selectOption("data");
   await expect(page.getByRole("heading", { name: "Raw materials to dispatch" })).toBeVisible();
   await expect(page.locator(".pm-process-scroll")).toBeVisible();
   await expect(
@@ -58,15 +56,14 @@ test("Virtual Plant switches industry, plant scope, and visual layer", async ({ 
   }
 
   await industry.selectOption("dairy");
-  await expect(page.getByRole("tab", { name: "Overall plant · A–Z" })).toHaveAttribute(
-    "aria-selected",
-    "true"
-  );
+  const section = page.getByRole("combobox", { name: "Choose plant section" });
+  const view = page.getByRole("combobox", { name: "Choose plant view" });
+  await expect(section).toHaveValue("overall");
   await expect(page.getByRole("region", { name: /Dairy Plant Overall plant/ })).toBeVisible();
 
-  await page.getByRole("tab", { name: "Raw material · storage · QC" }).click();
+  await section.selectOption("input");
   await expect(page.getByRole("region", { name: /Dairy Plant Raw material/ })).toBeVisible();
-  await page.getByRole("tab", { name: "Actual plant view" }).click();
+  await view.selectOption("machinery");
   const machinery = page.getByRole("region", { name: /Dairy Plant Raw material.*machinery/ });
   await expect(machinery).toBeVisible();
   await expect(page.getByAltText(/Dairy Plant machinery/)).toBeVisible();
@@ -80,7 +77,7 @@ test("Virtual Plant switches industry, plant scope, and visual layer", async ({ 
     "true"
   );
 
-  await page.getByRole("tab", { name: "Finished goods · QC · waste" }).click();
+  await section.selectOption("output");
   await expect(
     page.getByRole("region", { name: /Dairy Plant Finished goods.*machinery/ })
   ).toBeVisible();

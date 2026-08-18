@@ -11,7 +11,9 @@ function productionValue() {
 }
 
 function openStatisticalView() {
-  fireEvent.click(screen.getByRole("tab", { name: "Statistical view" }));
+  fireEvent.change(screen.getByRole("combobox", { name: "Choose plant view" }), {
+    target: { value: "data" }
+  });
 }
 
 describe("PM-01 virtual factory", () => {
