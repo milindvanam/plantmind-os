@@ -44,3 +44,18 @@ The preview uses simulated context, deterministic demo logic and illustrative IN
 Full setup, original route map, data model, design tokens, component inventory, test instructions, limitations and the original completion report are in [docs/SPRINT-1-IMPLEMENTATION.md](docs/SPRINT-1-IMPLEMENTATION.md).
 
 The approved charter and [decision-ready architecture blueprint](docs/PLANTMIND-OS-DECISION-READY-ARCHITECTURE-BLUEPRINT-v1.0.md) remain governing references. No new service, production connector, authentication layer or production write-back was introduced for this preview.
+
+## AI Development Agents
+
+PlantMind supports agent-independent development. Any AI coding agent—including Codex, Google Antigravity or a future agent—must begin with the permanent [PlantMind AI Development Agent Protocol](docs/AGENT_HANDOVER.md). Repository code and documentation, not previous chat history, are the authoritative project memory.
+
+Read these current references before proposing or implementing work:
+
+- [Product vision](docs/PRODUCT_VISION.md)
+- [Technical architecture](docs/ARCHITECTURE.md)
+- [PM-01 plant model](docs/PLANT_MODEL.md)
+- [Verified milestones](docs/MILESTONES.md)
+- [Architecture and product decisions](docs/DECISIONS.md)
+- [Current repository and product state](docs/CURRENT_STATE.md)
+- [Evidence-based next steps](docs/NEXT_STEPS.md)
+- [Machine-readable project state](docs/project-state.json)
