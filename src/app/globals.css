@@ -25,7 +25,16 @@
   --radius-md: 10px;
   --radius-lg: 16px;
   --sidebar-width: 248px;
+  --interface-text-scale: 1;
   color-scheme: dark;
+}
+
+:root[data-text-size="large"] {
+  --interface-text-scale: 1.12;
+}
+
+:root[data-text-size="extra-large"] {
+  --interface-text-scale: 1.24;
 }
 
 :root[data-theme="light"] {
@@ -1053,10 +1062,10 @@ body {
 .workspace-tabs a small {
   color: var(--text-subtle);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: calc(0.62rem * var(--interface-text-scale));
 }
 .workspace-tabs a span {
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--interface-text-scale));
   font-weight: 700;
 }
 .workspace-tabs a:hover {
@@ -2285,11 +2294,11 @@ button:disabled {
 }
 .logo strong {
   letter-spacing: -0.02em;
-  font-size: 16px;
+  font-size: calc(16px * var(--interface-text-scale));
 }
 .logo small {
   color: var(--text-subtle);
-  font-size: 9px;
+  font-size: calc(9px * var(--interface-text-scale));
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -2304,18 +2313,18 @@ button:disabled {
   gap: 4px;
 }
 .context-block strong {
-  font-size: 12px;
+  font-size: calc(12px * var(--interface-text-scale));
 }
 .context-block > span:last-child {
   display: flex;
   align-items: center;
   gap: 5px;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: calc(11px * var(--interface-text-scale));
 }
 .eyebrow {
   color: var(--text-subtle);
-  font-size: 10px;
+  font-size: calc(10px * var(--interface-text-scale));
   font-weight: 750;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -2334,7 +2343,7 @@ button:disabled {
   border-radius: 8px;
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 12px;
+  font-size: calc(12px * var(--interface-text-scale));
   font-weight: 650;
   border: 1px solid transparent;
   transition:
@@ -2345,7 +2354,7 @@ button:disabled {
 .nav-item > small {
   width: 18px;
   color: var(--text-subtle);
-  font: 8px var(--font-mono);
+  font: calc(8px * var(--interface-text-scale)) var(--font-mono);
 }
 .nav-item.active > small {
   color: var(--accent);
@@ -2379,11 +2388,11 @@ button:disabled {
   flex-direction: column;
 }
 .permission-note strong {
-  font-size: 11px;
+  font-size: calc(11px * var(--interface-text-scale));
 }
 .permission-note small {
   color: var(--text-subtle);
-  font-size: 10px;
+  font-size: calc(10px * var(--interface-text-scale));
 }
 .shell-body {
   min-width: 0;
@@ -2426,13 +2435,13 @@ button:disabled {
 .site-selector small,
 .profile small {
   color: var(--text-subtle);
-  font-size: 9px;
+  font-size: calc(9px * var(--interface-text-scale));
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 .site-selector strong,
 .profile strong {
-  font-size: 11px;
+  font-size: calc(11px * var(--interface-text-scale));
 }
 .profile {
   padding-left: 10px;
@@ -2446,7 +2455,7 @@ button:disabled {
   border-radius: 50%;
   background: var(--surface-3);
   color: var(--accent);
-  font-size: 10px;
+  font-size: calc(10px * var(--interface-text-scale));
   font-weight: 800;
 }
 .icon-button {
@@ -2465,6 +2474,41 @@ button:disabled {
 .icon-button:hover {
   background: var(--surface-hover);
   color: var(--text);
+}
+.text-size-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-1);
+}
+.text-size-switcher button {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--text-subtle);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.text-size-switcher button:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+.text-size-switcher button[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--surface-3);
+}
+@media (max-width: 760px) {
+  .text-size-switcher button:not([aria-pressed="true"]) {
+    display: none;
+  }
 }
 .notification-dot {
   width: 5px;

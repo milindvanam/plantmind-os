@@ -195,3 +195,17 @@ Existing routes remain valid deep links and are connected by internal workspace 
 
 ### Status
 Active.
+
+## D-015 — Interface text size is independent of visual-canvas zoom
+
+### Decision
+Provide Normal, Large and Extra Large text choices in the shared product header. Scale navigation and shell typography through a CSS variable, persist the selection locally, and leave 3D/panorama camera controls unchanged.
+
+### Reason
+Menu and header readability should be adjustable without distorting the virtual-factory workspace or requiring browser-level zoom.
+
+### Impact
+New shared navigation/header labels should use the interface text-scale token. Visual twin zoom remains a separate spatial interaction.
+
+### Status
+Active.

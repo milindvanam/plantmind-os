@@ -32,6 +32,7 @@ PlantMind is a working multi-experience prototype. Its most advanced physical pr
 - Simulated SAP maintenance handoff and curated executive/maintenance AI preview experiences.
 - Seven-destination workflow navigation: Overview, Executive Command, Virtual Plant, Plant Operations, Asset Intelligence, Decisions & Actions, and Data & Integrations.
 - Executive Briefing/Live Command and Investigation/Approval/Executive Outcome remain separate routes presented as internal workspace views. Industry Solutions is available from Overview.
+- The shared product header provides persistent A/A+/A++ interface text sizing for navigation, enterprise/header context and workspace tabs.
 
 ## Implemented plant simulation
 
@@ -69,7 +70,7 @@ The repository contains unit, component, integration, architecture and Playwrigh
 - Lint: **PASS**.
 - Type check: **PASS**.
 - Vitest: **PASS** — 19 files passed, 1 skipped; 76 tests passed, 1 skipped.
-- Playwright: updated navigation assertions pass, including Overview industry access, consolidated workspace traversal and mobile navigation. The Playwright process required manual termination after all assertions because its temporary web-server cleanup hung on this Windows host.
+- Playwright: updated navigation and text-size assertions pass, including persistence after reload. The Playwright process required manual termination after all assertions because its temporary web-server cleanup hung on this Windows host.
 - Production build: **PASS** — Next.js compiled, type-checked and generated all 22 pages/routes.
 
 ## Known issues and technical debt

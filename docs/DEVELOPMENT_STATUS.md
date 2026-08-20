@@ -17,6 +17,7 @@ The prototype already demonstrates a credible virtual-plant foundation. The larg
 |---|---|---|
 | Core application foundation | COMPLETE | Next.js application, modular structure, PostgreSQL/Drizzle foundation, shared shell, product routes and deterministic replay framework |
 | Executive experience | COMPLETE AS PREVIEW | Seven-chapter executive overview, CEO vision preview, executive briefing, sector journeys and connector catalogue |
+| Interface accessibility | COMPLETE AS PROTOTYPE | Persistent A/A+/A++ header control scales navigation and shell text independently from 3D/panorama zoom |
 | Legacy P-204A replay | COMPLETE | Deterministic asset replay, executive KPI/risk view and industrial timeline |
 | Real-data prototype | COMPLETE AS PROTOTYPE | UCI hydraulic-system dataset adapter, provenance and deterministic health interpretation |
 | PM-01 deterministic simulation | COMPLETE | Fixed-step clock, run lifecycle, seeded deterministic behavior, typed asset hierarchy and 82-tag registry |
@@ -60,6 +61,8 @@ Repository audit recorded on 19 Aug 2026:
 - **Format:** FAIL on five pre-existing tracked application/test files that are not Prettier-clean
 
 These are the latest documented validation results and should be refreshed after the next material coding milestone.
+
+The 20 Aug 2026 navigation/accessibility update additionally passed focused ESLint, TypeScript, app-shell unit, text-size persistence E2E assertions and the production build. The Windows Playwright web-server cleanup issue remains host-specific after assertions complete.
 
 ## Known gaps before beta
 

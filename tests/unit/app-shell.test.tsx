@@ -44,6 +44,9 @@ describe("application shell", () => {
     expect(screen.getByRole("button", { name: "Notifications" })).toHaveTextContent(
       "1 notification"
     );
+    fireEvent.click(screen.getByRole("button", { name: "Use extra large text size" }));
+    expect(document.documentElement).toHaveAttribute("data-text-size", "extra-large");
+    expect(window.localStorage.getItem("plantmind.text-size")).toBe("extra-large");
     fireEvent.click(screen.getByRole("button", { name: "Hide sidebar" }));
     expect(screen.getByRole("button", { name: "Show sidebar" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Route content" })).toBeVisible();

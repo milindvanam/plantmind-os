@@ -18,6 +18,7 @@ This reconstruction uses code, tests, milestone documents and Git history throug
 | PM-01 photorealistic tour | Seven-stage guided plant route, equipment context and full-screen site imagery. | Virtual-factory E2E coverage. | COMPLETE as prototype |
 | PM-01 immersive panorama twin | Seven linked chemical 360° panoramas with direct drag, wheel zoom, movement controls and observable hotspot. | Type/lint/unit/build and six virtual-factory Playwright tests recorded at implementation; panorama assets are deployed. | COMPLETE as prototype |
 | Product navigation consolidation | Reduced the operational sidebar from ten to seven destinations; grouped briefing with Executive Command and investigation/approval/outcome under Decisions & Actions; moved Industry Solutions into Overview. Existing routes and deep links remain available through internal tabs. | App-shell unit test, focused workflow E2E tests, type check and production build. | COMPLETE |
+| Persistent interface text sizing | Added A/A+/A++ controls to the product header. The selected size scales sidebar navigation, enterprise/header identity and workspace tabs without scaling the virtual-plant canvas, and persists in local browser storage. | App-shell unit test, computed-style/persistence E2E test, lint, type check and production build. | COMPLETE |
 
 ## Current milestone position
 

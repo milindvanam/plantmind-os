@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Badge, IconButton, SimulatedDataLabel } from "@/components/ui";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { TextSizeSwitcher } from "@/components/text-size-switcher";
 import { ScenarioControls } from "@/features/scenario/scenario-controls";
 import { ScenarioProvider } from "@/features/scenario/scenario-provider";
 
@@ -239,6 +240,7 @@ function ShellContent({ children }: { children: React.ReactNode }) {
                 <PanelLeftClose size={16} />
               </button>
             )}
+            <TextSizeSwitcher />
             <ThemeSwitcher />
             <IconButton label="Notifications">
               <Bell size={17} />

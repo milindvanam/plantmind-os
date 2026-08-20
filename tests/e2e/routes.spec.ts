@@ -113,3 +113,23 @@ test("light theme is user selectable", async ({ page }) => {
   await page.getByRole("button", { name: "Switch to light theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
+
+test("header text-size controls enlarge the interface and persist", async ({ page }) => {
+  await page.goto("/command");
+  const menuLabel = page.getByRole("link", { name: "Executive Command" });
+  const normalSize = await menuLabel.evaluate((element) =>
+    Number.parseFloat(window.getComputedStyle(element).fontSize)
+  );
+  await page.getByRole("button", { name: "Use extra large text size" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-text-size", "extra-large");
+  const enlargedSize = await menuLabel.evaluate((element) =>
+    Number.parseFloat(window.getComputedStyle(element).fontSize)
+  );
+  expect(enlargedSize).toBeGreaterThan(normalSize);
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-text-size", "extra-large");
+  await expect(page.getByRole("button", { name: "Use extra large text size" })).toHaveAttribute(
+    "aria-pressed",
+    "true"
+  );
+});
