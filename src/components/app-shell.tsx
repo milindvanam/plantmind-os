@@ -7,6 +7,7 @@ import { useState } from "react";
 import {
   Activity,
   Bell,
+  BookOpen,
   Building2,
   ChevronDown,
   Database,
@@ -27,32 +28,63 @@ import { ScenarioControls } from "@/features/scenario/scenario-controls";
 import { ScenarioProvider } from "@/features/scenario/scenario-provider";
 
 const navItems = [
-  { href: "/overview", label: "Overview", icon: Sparkles, permission: "Private preview" },
+  {
+    href: "/overview",
+    label: "Overview",
+    icon: Sparkles,
+    permission: "Private preview",
+    external: false
+  },
   {
     href: "/command",
     label: "Executive Command",
     icon: Gauge,
-    permission: "Briefing + live priorities"
+    permission: "Briefing + live priorities",
+    external: false
   },
-  { href: "/virtual-plant", label: "Virtual Plant", icon: Factory, permission: "All demo roles" },
-  { href: "/operations", label: "Plant Operations", icon: Factory, permission: "All demo roles" },
+  {
+    href: "/virtual-plant",
+    label: "Virtual Plant",
+    icon: Factory,
+    permission: "All demo roles",
+    external: false
+  },
+  {
+    href: "/operations",
+    label: "Plant Operations",
+    icon: Factory,
+    permission: "All demo roles",
+    external: false
+  },
   {
     href: "/assets/P-204A",
     label: "Asset Intelligence",
     icon: Activity,
-    permission: "All demo roles"
+    permission: "All demo roles",
+    external: false
   },
   {
     href: "/investigations/INV-204",
     label: "Decisions & Actions",
     icon: FileSearch,
-    permission: "Investigation + approval + outcome"
+    permission: "Investigation + approval + outcome",
+    external: false
   },
   {
     href: "/real-data",
     label: "Data & Integrations",
     icon: Database,
-    permission: "All demo roles"
+    permission: "All demo roles",
+    external: false
+  },
+  {
+    href:
+      process.env.NEXT_PUBLIC_KNOWLEDGE_HUB_URL ??
+      "https://plantmind-industrial-knowledge.mdv2024.chatgpt.site",
+    label: "Knowledge Hub",
+    icon: BookOpen,
+    permission: "Industrial intelligence knowledge base",
+    external: true
   }
 ] as const;
 
@@ -90,9 +122,29 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   return (
     <nav className="primary-nav" aria-label="Primary navigation">
-      {navItems.map(({ href, label, icon: Icon, permission }, index) => {
-        const active = isActiveDestination(pathname, href);
-        return (
+      {navItems.map(({ href, label, icon: Icon, permission, external }, index) => {
+        const active = !external && isActiveDestination(pathname, href);
+        const content = (
+          <>
+            <small>{String(index + 1).padStart(2, "0")}</small>
+            <Icon size={18} />
+            <span>{label}</span>
+          </>
+        );
+        return external ? (
+          <a
+            key={href}
+            href={href}
+            className="nav-item"
+            aria-label={label}
+            onClick={onNavigate}
+            title={`${permission} · opens in a new tab`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {content}
+          </a>
+        ) : (
           <Link
             key={href}
             href={href as Route}
@@ -102,9 +154,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
             onClick={onNavigate}
             title={permission}
           >
-            <small>{String(index + 1).padStart(2, "0")}</small>
-            <Icon size={18} />
-            <span>{label}</span>
+            {content}
           </Link>
         );
       })}

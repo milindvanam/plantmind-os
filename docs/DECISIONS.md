@@ -209,3 +209,17 @@ New shared navigation/header labels should use the interface text-scale token. V
 
 ### Status
 Active.
+
+## D-016 — Keep the Knowledge Hub independently deployed
+
+### Decision
+Expose the PlantMind Knowledge Hub as an eighth sidebar destination that opens its existing Docusaurus deployment in a new tab. Allow the destination to be overridden at build time with `NEXT_PUBLIC_KNOWLEDGE_HUB_URL`.
+
+### Reason
+The Hub is a complete content application with its own information architecture, MDX validation and local search. Linking the deployed application preserves those capabilities and avoids duplicating generated assets or coupling two unrelated build systems.
+
+### Impact
+PlantMind OS remains the operational product runtime, while the Knowledge Hub remains an independently versioned knowledge product. External users require access to both deployments. A future same-domain path can be introduced through hosting-level routing without changing Hub content.
+
+### Status
+Active.

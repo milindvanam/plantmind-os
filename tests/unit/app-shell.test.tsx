@@ -21,7 +21,7 @@ describe("application shell", () => {
     expect(screen.getAllByText("Executive Viewer").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("navigation", { name: "Primary navigation" }).querySelectorAll("a")
-    ).toHaveLength(7);
+    ).toHaveLength(8);
     expect(screen.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/overview");
     expect(screen.queryByRole("link", { name: "Executive Brief" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Industry Solutions" })).not.toBeInTheDocument();
@@ -37,6 +37,11 @@ describe("application shell", () => {
       "href",
       "/virtual-plant"
     );
+    expect(screen.getByRole("link", { name: "Knowledge Hub" })).toHaveAttribute(
+      "href",
+      "https://plantmind-industrial-knowledge.mdv2024.chatgpt.site"
+    );
+    expect(screen.getByRole("link", { name: "Knowledge Hub" })).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("link", { name: "Executive Command" })).toHaveAttribute(
       "aria-current",
       "page"

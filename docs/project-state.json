@@ -3,7 +3,7 @@
   "state_date": "2026-08-20",
   "current_branch": "main",
   "audited_implementation_commit": "05c5803d037f5c1fcee6ff9ca477730ecc2fbd13",
-  "current_status": "seven-destination workflow navigation with persistent header interface text sizing",
+  "current_status": "seven workflow destinations plus a separately deployed Knowledge Hub entry point and persistent header interface text sizing",
   "deployment": {
     "provider": "Netlify",
     "url": "https://plantmind-os.netlify.app",
@@ -26,7 +26,8 @@
     "PM-01 photorealistic tour",
     "PM-01 immersive panorama twin",
     "workflow-oriented primary navigation consolidation",
-    "persistent interface text sizing"
+    "persistent interface text sizing",
+    "Knowledge Hub sidebar integration"
   ],
   "active_modules": [
     "executive overview and vision preview",
@@ -58,6 +59,6 @@
     "Playwright temporary web-server cleanup can hang on the Windows host after assertions finish",
     "five tracked PM-01 UI/CSS/E2E files are not Prettier-clean"
   ],
-  "next_action": "PRODUCT OWNER DECISION REQUIRED: authorize and scope the next milestone",
+  "next_action": "PRODUCT OWNER DECISION REQUIRED: authorize public Knowledge Hub access and publication of the PlantMind sidebar integration",
   "documentation_last_updated": "2026-08-20"
 }

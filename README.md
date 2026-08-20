@@ -39,7 +39,7 @@ Truth boundary: telemetry and pump-condition labels on the real-data routes come
 - `/discovery/predict-equipment-failure` — deterministic P-204A failure-risk experience
 - `/discovery/ai-executive-team` — Maintenance Director AI and CEO Strategy AI
 
-The primary product navigation is intentionally consolidated into seven destinations. Executive Briefing is a view within Executive Command; investigation, approval and executive outcome are views within Decisions & Actions; Industry Solutions is entered from the executive Overview rather than the operational sidebar.
+The primary product navigation is intentionally consolidated into seven PlantMind workflow destinations plus the separately deployed PlantMind Knowledge Hub. Executive Briefing is a view within Executive Command; investigation, approval and executive outcome are views within Decisions & Actions; Industry Solutions is entered from the executive Overview rather than the operational sidebar. The Knowledge Hub opens in a new tab so its full documentation navigation and search remain available. Its URL can be overridden at build time with `NEXT_PUBLIC_KNOWLEDGE_HUB_URL`.
 
 The preview uses simulated context, deterministic demo logic and illustrative INR ranges. It does not claim production ML, live production connectors or write-back. Write-back is simulated, and every evidence/output class is labelled in the interface.
 
