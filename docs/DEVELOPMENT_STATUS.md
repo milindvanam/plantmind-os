@@ -57,14 +57,14 @@ Repository audit recorded on 19 Aug 2026:
 
 - **Lint:** PASS
 - **Type check:** PASS
-- **Vitest:** PASS — 19 files passed, 1 skipped; 76 tests passed, 1 skipped
-- **Production build:** PASS — 22 pages/routes generated
+- **Vitest:** PASS — 20 files passed, 1 skipped; 79 tests passed, 1 skipped
+- **Production build:** PASS — 23 pages/routes generated, including the same-origin Knowledge Hub resource route
 - **Playwright:** PARTIAL — 38 passed, 1 failed due to a stale mobile navigation expectation for the historical `In Action` label
 - **Format:** FAIL on five pre-existing tracked application/test files that are not Prettier-clean
 
 These are the latest documented validation results and should be refreshed after the next material coding milestone.
 
-The 20 Aug 2026 navigation/accessibility update additionally passed focused ESLint, TypeScript, app-shell unit, text-size persistence E2E assertions and the production build. The Windows Playwright web-server cleanup issue remains host-specific after assertions complete.
+The 20 Aug 2026 navigation/accessibility and Knowledge Hub integration additionally passed focused ESLint, TypeScript, app-shell and Hub-route tests, live same-origin browser checks and the production build. The Windows Playwright web-server cleanup issue remains host-specific after assertions complete.
 
 ## Known gaps before beta
 
