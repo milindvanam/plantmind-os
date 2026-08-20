@@ -78,11 +78,11 @@ const navItems = [
     external: false
   },
   {
-    href: "/knowledge-hub",
+    href: "/knowledgehub",
     label: "Knowledge Hub",
     icon: BookOpen,
     permission: "Industrial intelligence knowledge base",
-    external: false
+    external: true
   }
 ] as const;
 

@@ -213,13 +213,13 @@ Active.
 ## D-016 — Package the Knowledge Hub into the PlantMind origin
 
 ### Decision
-Expose the PlantMind Knowledge Hub as an eighth sidebar destination at `/knowledge-hub`. Build it from its Docusaurus/MDX source with `/knowledge-hub/` as the base path and package the generated static artifact into the PlantMind OS deployment.
+Expose the PlantMind Knowledge Hub as an eighth sidebar destination at `/knowledgehub`, opening in a new tab so the operational portal remains available. Build it from its Docusaurus/MDX source with `/knowledgehub/` as the base path and package the generated static artifact into the PlantMind OS deployment.
 
 ### Reason
 The Hub is a complete content application with its own information architecture, MDX validation and local search, but users should remain on the PlantMind domain. A static subpath preserves those capabilities without introducing a second runtime into the Next.js application.
 
 ### Impact
-PlantMind OS remains the operational runtime and release owner. The Hub source remains independently maintainable, but every Hub content release must be rebuilt and copied into `public/knowledge-hub-static` before the PlantMind production build. Next.js rewrites map `/knowledge-hub` and its descendants to that packaged artifact.
+PlantMind OS remains the operational runtime and release owner. The Hub source remains independently maintainable, but every Hub content release must be rebuilt and copied into `public/knowledge-hub-static` before the PlantMind production build. A dedicated Next.js handler serves `/knowledgehub` and its descendants from that packaged artifact.
 
 ### Status
 Active.

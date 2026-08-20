@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { GET } from "@/app/knowledge-hub/[[...path]]/route";
+import { GET } from "@/app/knowledgehub/[[...path]]/route";
 
 function requestHub(path?: string[]) {
-  return GET(new Request("http://localhost/knowledge-hub"), {
+  return GET(new Request("http://localhost/knowledgehub"), {
     params: Promise.resolve({ path })
   });
 }

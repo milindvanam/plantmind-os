@@ -31,7 +31,7 @@ PlantMind is a working multi-experience prototype. Its most advanced physical pr
 - PM-01 virtual factory, asset/tag drill-down, production dashboard and visual twin layers.
 - Simulated SAP maintenance handoff and curated executive/maintenance AI preview experiences.
 - Seven-destination workflow navigation: Overview, Executive Command, Virtual Plant, Plant Operations, Asset Intelligence, Decisions & Actions, and Data & Integrations.
-- An eighth sidebar destination opens the PlantMind Knowledge Hub at the native `/knowledge-hub` route. Its Docusaurus static build is packaged into PlantMind OS, preserving its navigation and local search without sending users to another domain.
+- An eighth sidebar destination opens the PlantMind Knowledge Hub at `/knowledgehub` in a new tab. Its Docusaurus static build is packaged into PlantMind OS, preserving the main portal tab, Hub navigation and local search without sending users to another domain.
 - Executive Briefing/Live Command and Investigation/Approval/Executive Outcome remain separate routes presented as internal workspace views. Industry Solutions is available from Overview.
 - The shared product header provides persistent A/A+/A++ interface text sizing for navigation, enterprise/header context and workspace tabs.
 

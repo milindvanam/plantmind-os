@@ -36,7 +36,7 @@ flowchart LR
 
 - `src/app/` contains App Router pages, root layout, error/loading/not-found UI and one route handler.
 - `src/components/app-shell.tsx` provides the shared navigation, theme controls, scenario metadata and executive-viewer presentation.
-- The sidebar links to `/knowledge-hub`, where Next.js rewrites serve a Docusaurus static build packaged under `public/knowledge-hub-static`. The Hub retains its own MDX/content validation, navigation and local-search build while sharing the PlantMind origin and release artifact.
+- The sidebar opens `/knowledgehub` in a new tab. A dedicated Next.js route handler serves the Docusaurus static build packaged under `public/knowledge-hub-static`. The Hub retains its own MDX/content validation, navigation and local-search build while sharing the PlantMind origin and release artifact.
 - `src/components/workspace-tabs.tsx` preserves deep routes while grouping briefing/command and investigation/approval/outcome into two coherent workspaces.
 - `src/features/overview/` implements the executive introduction.
 - `src/features/vision/` implements the CEO briefing, sector journeys, connector catalogue and curated AI preview pages.

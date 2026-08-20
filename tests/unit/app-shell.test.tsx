@@ -39,9 +39,9 @@ describe("application shell", () => {
     );
     expect(screen.getByRole("link", { name: "Knowledge Hub" })).toHaveAttribute(
       "href",
-      "/knowledge-hub"
+      "/knowledgehub"
     );
-    expect(screen.getByRole("link", { name: "Knowledge Hub" })).not.toHaveAttribute("target");
+    expect(screen.getByRole("link", { name: "Knowledge Hub" })).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("link", { name: "Executive Command" })).toHaveAttribute(
       "aria-current",
       "page"

@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
   typedRoutes: true,
   outputFileTracingIncludes: {
-    "/knowledge-hub/*": ["./public/knowledge-hub-static/**/*"]
+    "/knowledge-hub/*": ["./public/knowledge-hub-static/**/*"],
+    "/knowledgehub/*": ["./public/knowledge-hub-static/**/*"]
   },
   turbopack: {
     root: path.resolve(process.cwd())
