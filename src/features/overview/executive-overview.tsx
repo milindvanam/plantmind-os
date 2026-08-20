@@ -298,7 +298,8 @@ export function ExecutiveOverview() {
         </div>
         <div className="overview-header-actions">
           <span>Private vision preview</span>
-          <Link href="/briefing">
+          <Link href="/in-action">Industry solutions</Link>
+          <Link href="/command">
             Skip to product <ArrowRight />
           </Link>
         </div>
@@ -312,9 +313,14 @@ export function ExecutiveOverview() {
           <h1>{slide.title}</h1>
           <p>{slide.body}</p>
           {active === slides.length - 1 && (
-            <Link className="overview-enter" href="/briefing">
-              Enter PlantMind OS <ArrowRight />
-            </Link>
+            <div className="overview-enter-group">
+              <Link className="overview-enter overview-enter-secondary" href="/in-action">
+                Explore industry solutions
+              </Link>
+              <Link className="overview-enter" href="/command">
+                Enter PlantMind OS <ArrowRight />
+              </Link>
+            </div>
           )}
         </div>
         {slide.visual}

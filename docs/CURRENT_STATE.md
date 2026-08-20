@@ -1,6 +1,6 @@
 # PlantMind OS Current State
 
-Last repository audit: 2026-08-19 (Asia/Kolkata).
+Last repository audit: 2026-08-20 (Asia/Kolkata).
 
 ## Current release state
 
@@ -30,6 +30,8 @@ PlantMind is a working multi-experience prototype. Its most advanced physical pr
 - Public UCI hydraulic-data replay with provenance and deterministic prototype assessment.
 - PM-01 virtual factory, asset/tag drill-down, production dashboard and visual twin layers.
 - Simulated SAP maintenance handoff and curated executive/maintenance AI preview experiences.
+- Seven-destination workflow navigation: Overview, Executive Command, Virtual Plant, Plant Operations, Asset Intelligence, Decisions & Actions, and Data & Integrations.
+- Executive Briefing/Live Command and Investigation/Approval/Executive Outcome remain separate routes presented as internal workspace views. Industry Solutions is available from Overview.
 
 ## Implemented plant simulation
 
@@ -67,7 +69,7 @@ The repository contains unit, component, integration, architecture and Playwrigh
 - Lint: **PASS**.
 - Type check: **PASS**.
 - Vitest: **PASS** — 19 files passed, 1 skipped; 76 tests passed, 1 skipped.
-- Playwright: **PARTIAL** — 38 passed, 1 failed. The mobile CEO-preview test expects the historical `In Action` primary-nav label, but the current sequenced menu no longer contains that label.
+- Playwright: updated navigation assertions pass, including Overview industry access, consolidated workspace traversal and mobile navigation. The Playwright process required manual termination after all assertions because its temporary web-server cleanup hung on this Windows host.
 - Production build: **PASS** — Next.js compiled, type-checked and generated all 22 pages/routes.
 
 ## Known issues and technical debt
@@ -86,7 +88,6 @@ The repository contains unit, component, integration, architecture and Playwrigh
 - Panorama imagery is prototype imagery, not calibrated customer 360 photography or photogrammetry.
 - External Netlify configuration is not version-controlled.
 - Existing older documents describe earlier route counts/milestones and must be read as historical snapshots, not the current total application state.
-- `tests/e2e/vision-preview.spec.ts` contains a stale mobile navigation expectation for `In Action` after the navigation was resequenced.
 - Five tracked PM-01 UI/CSS/E2E files pre-date this handover in a non-Prettier-clean state.
 
 ## Immediate product state

@@ -18,7 +18,7 @@ test.describe("executive overview", () => {
     }
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Prove it in 6–8 weeks");
     await page.getByRole("link", { name: "Enter PlantMind OS" }).click();
-    await expect(page).toHaveURL(/\/briefing$/);
+    await expect(page).toHaveURL(/\/command$/);
   });
 
   test("overview supports keyboard navigation and a mobile viewport", async ({ page }) => {
@@ -31,5 +31,11 @@ test.describe("executive overview", () => {
     await page.keyboard.press("ArrowRight");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("intelligence layer");
     await expect(page.getByRole("button", { name: "Previous chapter" })).toBeEnabled();
+  });
+
+  test("industry solutions are available from the overview", async ({ page }) => {
+    await page.goto("/overview");
+    await page.getByRole("link", { name: "Industry solutions" }).click();
+    await expect(page).toHaveURL(/\/in-action$/);
   });
 });

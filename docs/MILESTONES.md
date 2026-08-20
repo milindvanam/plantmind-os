@@ -17,10 +17,10 @@ This reconstruction uses code, tests, milestone documents and Git history throug
 | PM-01 interactive 3D twin | Industry-differentiated 3D scenes; chemical scene connected to observable state and bounded history. | 3D component exercised by virtual-factory tests/E2E; boundary test checks safe contract. | COMPLETE for chemical prototype; PARTIAL for other industries |
 | PM-01 photorealistic tour | Seven-stage guided plant route, equipment context and full-screen site imagery. | Virtual-factory E2E coverage. | COMPLETE as prototype |
 | PM-01 immersive panorama twin | Seven linked chemical 360° panoramas with direct drag, wheel zoom, movement controls and observable hotspot. | Type/lint/unit/build and six virtual-factory Playwright tests recorded at implementation; panorama assets are deployed. | COMPLETE as prototype |
+| Product navigation consolidation | Reduced the operational sidebar from ten to seven destinations; grouped briefing with Executive Command and investigation/approval/outcome under Decisions & Actions; moved Industry Solutions into Overview. Existing routes and deep links remain available through internal tabs. | App-shell unit test, focused workflow E2E tests, type check and production build. | COMPLETE |
 
 ## Current milestone position
 
 The repository is beyond the original PM-01 visualization milestone and currently represents a healthy deterministic chemical-plant prototype with multiple visual layers. It is not yet a production beta: it lacks real PM-01 connectors, persistence, authentication, calibrated customer models, failure scenarios and active PlantMind intelligence.
 
 No repository evidence establishes an approved next milestone number after the immersive panorama twin. **PRODUCT OWNER DECISION REQUIRED** before assigning or implementing the next milestone.
-

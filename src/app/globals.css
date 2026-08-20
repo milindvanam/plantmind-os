@@ -1016,6 +1016,67 @@ body {
   color: var(--accent-ink);
   background: var(--accent);
 }
+.overview-enter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+.overview-enter-group .overview-enter {
+  margin-top: 0;
+}
+.overview-enter-secondary {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+}
+.workspace-tabs {
+  align-items: center;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: inline-flex;
+  gap: 4px;
+  margin: 0 0 20px;
+  padding: 4px;
+}
+.workspace-tabs a {
+  align-items: center;
+  border-radius: 10px;
+  color: var(--text-muted);
+  display: inline-flex;
+  gap: 9px;
+  min-height: 38px;
+  padding: 8px 13px;
+  text-decoration: none;
+}
+.workspace-tabs a small {
+  color: var(--text-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+}
+.workspace-tabs a span {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.workspace-tabs a:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.workspace-tabs a.active {
+  background: var(--surface-3);
+  color: var(--accent);
+}
+@media (max-width: 700px) {
+  .workspace-tabs {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+  }
+  .workspace-tabs a {
+    flex: 0 0 auto;
+  }
+}
 .overview-visual {
   height: min(57svh, 570px);
   min-height: 340px;

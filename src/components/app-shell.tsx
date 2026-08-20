@@ -6,11 +6,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   Activity,
-  BookOpenText,
   Bell,
   Building2,
   ChevronDown,
-  ClipboardCheck,
   Database,
   Factory,
   FileSearch,
@@ -30,16 +28,10 @@ import { ScenarioProvider } from "@/features/scenario/scenario-provider";
 const navItems = [
   { href: "/overview", label: "Overview", icon: Sparkles, permission: "Private preview" },
   {
-    href: "/briefing",
-    label: "Executive Brief",
-    icon: BookOpenText,
-    permission: "Private preview"
-  },
-  {
     href: "/command",
     label: "Executive Command",
     icon: Gauge,
-    permission: "Executive + Operations"
+    permission: "Briefing + live priorities"
   },
   { href: "/virtual-plant", label: "Virtual Plant", icon: Factory, permission: "All demo roles" },
   { href: "/operations", label: "Plant Operations", icon: Factory, permission: "All demo roles" },
@@ -51,29 +43,33 @@ const navItems = [
   },
   {
     href: "/investigations/INV-204",
-    label: "Investigation & Decision",
+    label: "Decisions & Actions",
     icon: FileSearch,
-    permission: "Reliability + Operations"
-  },
-  {
-    href: "/interventions/ACT-204",
-    label: "Approval & Outcome",
-    icon: ClipboardCheck,
-    permission: "Plant Head approval"
+    permission: "Investigation + approval + outcome"
   },
   {
     href: "/real-data",
     label: "Data & Integrations",
     icon: Database,
     permission: "All demo roles"
-  },
-  {
-    href: "/in-action",
-    label: "Industry Solutions",
-    icon: Building2,
-    permission: "Private preview"
   }
 ] as const;
+
+const consolidatedRoutes: Readonly<Record<string, readonly string[]>> = {
+  "/command": ["/command", "/briefing"],
+  "/investigations/INV-204": [
+    "/investigations/INV-204",
+    "/interventions/ACT-204",
+    "/executives/INV-204"
+  ]
+};
+
+function isActiveDestination(pathname: string, href: string) {
+  const destinations = consolidatedRoutes[href] ?? [href];
+  return destinations.some(
+    (destination) => pathname === destination || pathname.startsWith(`${destination}/`)
+  );
+}
 
 function Logo() {
   return (
@@ -94,8 +90,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="primary-nav" aria-label="Primary navigation">
       {navItems.map(({ href, label, icon: Icon, permission }, index) => {
-        const active =
-          pathname === href || (href !== "/command" && pathname.startsWith(`${href}/`));
+        const active = isActiveDestination(pathname, href);
         return (
           <Link
             key={href}

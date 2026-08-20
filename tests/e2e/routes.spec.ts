@@ -39,12 +39,34 @@ test("primary navigation reaches the visible operational journey", async ({ page
     "/virtual-plant",
     "/operations",
     "/assets/P-204A",
-    "/investigations/INV-204",
-    "/interventions/ACT-204"
+    "/investigations/INV-204"
   ]) {
     await page.locator(`a[href="${route}"]`).first().click();
     await expect(page).toHaveURL(new RegExp(route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
   }
+});
+
+test("consolidated workspaces preserve briefing, approval, and outcome routes", async ({
+  page
+}) => {
+  await page.goto("/command");
+  await page
+    .getByRole("navigation", { name: "Executive Command views" })
+    .getByRole("link", { name: "Briefing" })
+    .click();
+  await expect(page).toHaveURL(/\/briefing$/);
+
+  await page.goto("/investigations/INV-204");
+  await page
+    .getByRole("navigation", { name: "Decisions and actions workflow" })
+    .getByRole("link", { name: "Approval" })
+    .click();
+  await expect(page).toHaveURL(/\/interventions\/ACT-204$/);
+  await page
+    .getByRole("navigation", { name: "Decisions and actions workflow" })
+    .getByRole("link", { name: "Executive Outcome" })
+    .click();
+  await expect(page).toHaveURL(/\/executives\/INV-204$/);
 });
 
 test("scenario controls expose start pause resume reset stage and speed", async ({ page }) => {

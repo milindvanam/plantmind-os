@@ -8,6 +8,7 @@ This file records only work supported by repository limitations and extension no
 2. Confirm the next milestone and acceptance criteria. **PRODUCT OWNER DECISION REQUIRED**.
 3. Confirm whether the next priority is simulation depth, real connectivity, PM-01 persistence, or product intelligence. **PRODUCT OWNER DECISION REQUIRED**.
 4. Preserve and extend the deterministic/observable boundary tests for any approved change.
+5. Keep the seven-destination workflow navigation stable unless user research supports another information-architecture change.
 
 ## Near-term candidates already evidenced in the repository
 
@@ -28,4 +29,3 @@ Each candidate requires a scoped milestone and product-owner approval; ordering 
 Repository blueprints describe evidence collection, confidence, impact assessment, contextual/knowledge models, industrial AI agents, governed interventions and production integrations. None should be treated as approved implementation scope merely because it appears in a vision document.
 
 **PRODUCT OWNER DECISION REQUIRED:** select target industry, pilot plant, source systems, operating decisions, safety/governance level and success measures before moving from prototype toward MVP or beta.
-

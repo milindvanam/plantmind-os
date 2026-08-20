@@ -182,3 +182,16 @@ Documentation commits may trigger deployment. External Netlify settings are not 
 ### Status
 Active.
 
+## D-014 — Workflow-oriented primary navigation
+
+### Decision
+Keep seven primary destinations. Treat Executive Briefing and Live Command as views inside Executive Command; treat Investigation, Approval and Executive Outcome as views inside Decisions & Actions; expose Industry Solutions from Overview rather than the operational sidebar.
+
+### Reason
+The earlier ten-item sidebar separated consecutive phases of the same executive and decision workflows, increasing perceived product complexity.
+
+### Impact
+Existing routes remain valid deep links and are connected by internal workspace tabs. New pages should join an existing workflow where appropriate rather than automatically becoming a new primary LHS destination.
+
+### Status
+Active.

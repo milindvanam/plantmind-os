@@ -35,7 +35,7 @@ test.describe("CEO Vision Preview", () => {
     await page.getByRole("button", { name: "Open navigation" }).click();
     const mobileDestination = page
       .getByRole("navigation", { name: "Primary navigation" })
-      .getByRole("link", { name: "In Action" });
+      .getByRole("link", { name: "Decisions & Actions" });
     await expect(mobileDestination).toBeVisible();
     await mobileDestination.click();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

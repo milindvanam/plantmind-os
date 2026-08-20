@@ -21,11 +21,13 @@ describe("application shell", () => {
     expect(screen.getAllByText("Executive Viewer").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("navigation", { name: "Primary navigation" }).querySelectorAll("a")
-    ).toHaveLength(10);
+    ).toHaveLength(7);
     expect(screen.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/overview");
-    expect(screen.getByRole("link", { name: "Executive Brief" })).toHaveAttribute(
+    expect(screen.queryByRole("link", { name: "Executive Brief" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Industry Solutions" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Decisions & Actions" })).toHaveAttribute(
       "href",
-      "/briefing"
+      "/investigations/INV-204"
     );
     expect(screen.getByRole("link", { name: "Data & Integrations" })).toHaveAttribute(
       "href",

@@ -34,6 +34,7 @@ flowchart LR
 
 - `src/app/` contains App Router pages, root layout, error/loading/not-found UI and one route handler.
 - `src/components/app-shell.tsx` provides the shared navigation, theme controls, scenario metadata and executive-viewer presentation.
+- `src/components/workspace-tabs.tsx` preserves deep routes while grouping briefing/command and investigation/approval/outcome into two coherent workspaces.
 - `src/features/overview/` implements the executive introduction.
 - `src/features/vision/` implements the CEO briefing, sector journeys, connector catalogue and curated AI preview pages.
 - `src/features/scenario/`, `command/` and `timeline/` implement the legacy P-204A replay and decision views.
