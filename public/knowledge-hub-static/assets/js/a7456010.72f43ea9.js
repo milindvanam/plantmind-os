@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkplantmind_industrial_intelligence_knowledge_hub=self.webpackChunkplantmind_industrial_intelligence_knowledge_hub||[]).push([[1235],{8552:e=>{e.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);

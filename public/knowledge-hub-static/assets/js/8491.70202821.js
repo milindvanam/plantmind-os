@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkplantmind_industrial_intelligence_knowledge_hub=self.webpackChunkplantmind_industrial_intelligence_knowledge_hub||[]).push([[8491],{8491:(e,n,i)=>{i.d(n,{createPacketServices:()=>l.$});var l=i(9773);i(1400)}}]);

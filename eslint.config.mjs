@@ -42,6 +42,7 @@ export default defineConfig([
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
+    "public/knowledge-hub-static/**",
     "drizzle/meta/**"
   ])
 ]);

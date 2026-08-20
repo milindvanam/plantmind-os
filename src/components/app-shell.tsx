@@ -78,13 +78,11 @@ const navItems = [
     external: false
   },
   {
-    href:
-      process.env.NEXT_PUBLIC_KNOWLEDGE_HUB_URL ??
-      "https://plantmind-industrial-knowledge.mdv2024.chatgpt.site",
+    href: "/knowledge-hub",
     label: "Knowledge Hub",
     icon: BookOpen,
     permission: "Industrial intelligence knowledge base",
-    external: true
+    external: false
   }
 ] as const;
 

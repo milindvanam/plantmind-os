@@ -29,14 +29,14 @@ flowchart LR
   Hidden -. "must not reach projection/UI" .-> Reality
   Legacy --> API --> DB
   Netlify --> Routes
-  Browser -. "explicit external navigation" .-> Knowledge
+  Routes --> Knowledge
 ```
 
 ## Frontend
 
 - `src/app/` contains App Router pages, root layout, error/loading/not-found UI and one route handler.
 - `src/components/app-shell.tsx` provides the shared navigation, theme controls, scenario metadata and executive-viewer presentation.
-- The sidebar links to the separately deployed Docusaurus Knowledge Hub in a new tab. This keeps its content/search build independent from the operational Next.js runtime; `NEXT_PUBLIC_KNOWLEDGE_HUB_URL` can override the public target at build time.
+- The sidebar links to `/knowledge-hub`, where Next.js rewrites serve a Docusaurus static build packaged under `public/knowledge-hub-static`. The Hub retains its own MDX/content validation, navigation and local-search build while sharing the PlantMind origin and release artifact.
 - `src/components/workspace-tabs.tsx` preserves deep routes while grouping briefing/command and investigation/approval/outcome into two coherent workspaces.
 - `src/features/overview/` implements the executive introduction.
 - `src/features/vision/` implements the CEO briefing, sector journeys, connector catalogue and curated AI preview pages.

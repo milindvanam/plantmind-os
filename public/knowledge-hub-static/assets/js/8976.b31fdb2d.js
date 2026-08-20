@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkplantmind_industrial_intelligence_knowledge_hub=self.webpackChunkplantmind_industrial_intelligence_knowledge_hub||[]).push([[8976],{8976:(e,n,i)=>{i.d(n,{createPieServices:()=>l.f});var l=i(6019);i(1400)}}]);

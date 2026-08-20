@@ -1,0 +1,1 @@
+(self.webpackChunkplantmind_industrial_intelligence_knowledge_hub=self.webpackChunkplantmind_industrial_intelligence_knowledge_hub||[]).push([[5741],{5741:()=>{}}]);
