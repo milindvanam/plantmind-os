@@ -26,6 +26,7 @@ PlantMind is a working multi-experience prototype. Its most advanced physical pr
 
 - Seven-chapter executive overview and CEO vision preview.
 - Executive briefing, sector journeys and connector catalogue with truth classification.
+- Beta-facing Connect a Plant workspace with controlled-readiness gates and an interactive, explicitly simulated SAP maintenance sandbox.
 - Legacy P-204A deterministic asset replay, executive dashboard and industrial timeline.
 - Public UCI hydraulic-data replay with provenance and deterministic prototype assessment.
 - PM-01 virtual factory, asset/tag drill-down, production dashboard and visual twin layers.
@@ -75,6 +76,7 @@ The repository contains unit, component, integration, architecture and Playwrigh
 - Playwright: updated navigation and text-size assertions pass, including persistence after reload. The Playwright process required manual termination after all assertions because its temporary web-server cleanup hung on this Windows host.
 - Production build: **PASS** — Next.js compiled, type-checked and generated all 22 pages/routes.
 - CCTV/twin checkpoint: **PASS** — focused unit coverage, ESLint, TypeScript and production build passed; focused Playwright assertions ran with the known Windows runner cleanup behavior.
+- SAP beta foundation checkpoint: **PASS** — 84 Vitest tests passed with 1 skipped; ESLint, TypeScript and the optimized production build passed. A focused Playwright run stalled after launching Chromium on this Windows host and was terminated without a browser assertion result.
 
 ## Known issues and technical debt
 
@@ -88,6 +90,7 @@ The repository contains unit, component, integration, architecture and Playwrigh
 - No active failure/degradation scenario, including HX-301 fouling, is wired into PM-01.
 - No production authentication, tenancy enforcement or route protection exists.
 - No live PLC/DCS/SCADA/historian/MES/LIMS/CMMS/ERP connector or write-back exists.
+- The SAP sandbox state and audit list are browser-session demonstration state; no durable connector store or credential vault is connected.
 - Other industry landscapes lack industry-specific physical models and observable twins.
 - Panorama imagery is prototype imagery, not calibrated customer 360 photography or photogrammetry.
 - CCTV captures are representative prototype imagery, not connected cameras, recorded customer footage or a production VMS integration.

@@ -31,7 +31,7 @@ describe("application shell", () => {
     );
     expect(screen.getByRole("link", { name: "Data & Integrations" })).toHaveAttribute(
       "href",
-      "/real-data"
+      "/connect"
     );
     expect(screen.getByRole("link", { name: "Virtual Plant" })).toHaveAttribute(
       "href",

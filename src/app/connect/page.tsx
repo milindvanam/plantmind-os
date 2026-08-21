@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { ConnectPage } from "@/features/vision/vision-pages";
-export const metadata: Metadata = { title: "Connect" };
+import { BetaIntegrationWorkspace } from "@/features/integrations/beta-integration-workspace";
+
+export const metadata: Metadata = { title: "Connect a Plant" };
+
 export default function Page() {
-  return <ConnectPage />;
+  return <BetaIntegrationWorkspace />;
 }

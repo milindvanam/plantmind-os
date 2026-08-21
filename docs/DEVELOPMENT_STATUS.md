@@ -19,6 +19,7 @@ The prototype already demonstrates a credible virtual-plant foundation. The larg
 | Executive experience | COMPLETE AS PREVIEW | Seven-chapter executive overview, CEO vision preview, executive briefing, sector journeys and connector catalogue |
 | Interface accessibility | COMPLETE AS PROTOTYPE | Persistent A/A+/A++ header control scales navigation and shell text independently from 3D/panorama zoom |
 | Knowledge Hub integration | COMPLETE | Eighth sidebar destination opens the packaged Docusaurus knowledge base in a new tab at the same-origin `/knowledgehub` route with its content navigation and local search intact |
+| SAP connector sandbox | COMPLETE AS PROTOTYPE | `/connect` demonstrates contract validation, equipment import/mapping, maintenance-notification drafting, named approval and an audit trail without a live endpoint or external write-back |
 | Legacy P-204A replay | COMPLETE | Deterministic asset replay, executive KPI/risk view and industrial timeline |
 | Real-data prototype | COMPLETE AS PROTOTYPE | UCI hydraulic-system dataset adapter, provenance and deterministic health interpretation |
 | PM-01 deterministic simulation | COMPLETE | Fixed-step clock, run lifecycle, seeded deterministic behavior, typed asset hierarchy and 82-tag registry |

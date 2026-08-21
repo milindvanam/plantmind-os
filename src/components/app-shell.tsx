@@ -71,7 +71,7 @@ const navItems = [
     external: false
   },
   {
-    href: "/real-data",
+    href: "/connect",
     label: "Data & Integrations",
     icon: Database,
     permission: "All demo roles",
@@ -88,6 +88,7 @@ const navItems = [
 
 const consolidatedRoutes: Readonly<Record<string, readonly string[]>> = {
   "/command": ["/command", "/briefing"],
+  "/connect": ["/connect", "/real-data"],
   "/investigations/INV-204": [
     "/investigations/INV-204",
     "/interventions/ACT-204",

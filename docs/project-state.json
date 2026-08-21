@@ -3,7 +3,7 @@
   "state_date": "2026-08-22",
   "current_branch": "main",
   "audited_implementation_commit": "4fd6becfe0366621a32517ff4cb7cb0d19003e8b",
-  "current_status": "working multi-experience prototype with representative CCTV operations and connected digital-twin demonstrations",
+  "current_status": "working multi-experience prototype with a controlled-beta readiness workspace and deterministic SAP maintenance sandbox",
   "deployment": {
     "provider": "Netlify",
     "url": "https://plantmind-os.netlify.app",
@@ -26,6 +26,7 @@
     "PM-01 photorealistic tour",
     "PM-01 immersive panorama twin",
     "PM-01 representative CCTV operations view",
+    "Beta Foundation 01 SAP connector sandbox",
     "workflow-oriented primary navigation consolidation",
     "persistent interface text sizing",
     "same-origin Knowledge Hub integration"
@@ -38,15 +39,16 @@
     "PM-01 Plant Reality simulation",
     "PM-01 observable projection and controller",
     "PM-01 process, statistical, 3D, panorama and CCTV UI",
+    "typed SAP sandbox contracts, object mapping and governed maintenance draft workflow",
     "PostgreSQL/Drizzle legacy persistence foundation"
   ],
   "test_status": {
     "format": "PASS for CCTV/twin milestone files",
     "lint": "PASS",
     "typecheck": "PASS",
-    "vitest": "PASS: 20 files passed, 1 skipped; 79 tests passed, 1 skipped",
-    "playwright": "Focused CCTV and 3D-twin assertions exercised; Windows runner cleanup remains host-sensitive",
-    "build": "PASS: Next.js generated 23 pages/routes, including the dynamic same-origin Knowledge Hub resource route"
+    "vitest": "PASS: 22 files passed, 1 skipped; 84 tests passed, 1 skipped",
+    "playwright": "SAP beta flow test added; the Windows Playwright runner stalled after launching Chromium and was terminated without an assertion result",
+    "build": "PASS: optimized Next.js production build completed"
   },
   "known_issues": [
     "PM-01 state and history are browser-local",
@@ -58,7 +60,8 @@
     "model and utility assumptions require engineering calibration",
     "Netlify settings are external to the repository",
     "Playwright temporary web-server cleanup can hang on the Windows host after assertions finish",
-    "CCTV imagery is representative and has no live camera/VMS connection"
+    "CCTV imagery is representative and has no live camera/VMS connection",
+    "SAP connector is a deterministic browser-session sandbox with no endpoint, credentials, persistence or external write-back"
   ],
   "next_action": "PRODUCT OWNER DECISION REQUIRED: authorize and scope the next milestone",
   "documentation_last_updated": "2026-08-22"

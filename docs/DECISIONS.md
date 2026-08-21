@@ -237,3 +237,21 @@ Replacing representative captures with real feeds requires an approved camera/VM
 
 ### Status
 Active for prototype.
+
+## D-018 — Prove the SAP workflow in a deterministic sandbox before live connectivity
+
+### Decision
+
+Make the first beta integration deliverable an explicitly simulated SAP S/4HANA maintenance workflow. Use typed equipment, functional-location, mapping, draft-notification and audit contracts while keeping all state session-local and all external writes blocked.
+
+### Reason
+
+A design partner can evaluate the operating workflow and authority model before granting access to SAP, while PlantMind avoids collecting credentials or implying that an uncommissioned connector is live.
+
+### Impact
+
+The `Connect a Plant` workspace may generate only `SIM-SAP-*` records. A real connector requires server-side authentication, tenant authorization, a secret vault, an authorized SAP sandbox, retry/idempotency behavior and customer-approved API scopes. The browser must never collect or retain production SAP secrets.
+
+### Status
+
+Active for prototype.
