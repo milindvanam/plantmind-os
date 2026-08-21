@@ -223,3 +223,17 @@ PlantMind OS remains the operational runtime and release owner. The Hub source r
 
 ### Status
 Active.
+
+## D-017 — Keep CCTV and digital-twin demonstrations truthfully labelled
+
+### Decision
+Provide a representative CCTV operations wall and describe the PM-01 connected 3D experience as a digital-twin representation. Bind overlays only to the observable `Pm01FactoryView` projection and explicitly state that no live CCTV, computer-vision inference or customer-site scan is connected.
+
+### Reason
+The prototype needs to communicate the intended plant-operations experience without confusing representative imagery and deterministic simulation with commissioned industrial infrastructure.
+
+### Impact
+Replacing representative captures with real feeds requires an approved camera/VMS connector, authentication, retention and privacy controls. Calling the twin operational at a customer site requires calibrated asset geometry, tag mappings and live/historian integration. Hidden simulation ground truth remains inaccessible to both views.
+
+### Status
+Active for prototype.

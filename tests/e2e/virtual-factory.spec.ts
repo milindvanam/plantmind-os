@@ -35,7 +35,7 @@ test("PM-01 3D twin binds assets to observable telemetry and replay", async ({ p
   await page.goto("/virtual-plant");
   await page.getByRole("combobox", { name: "Choose plant view" }).selectOption("model3d");
   const twin = page.getByRole("region", { name: /Chemical Industry.*interactive 3D/ });
-  await expect(twin).toContainText("CONNECTED OPERATIONAL TWIN");
+  await expect(twin).toContainText("CONNECTED DIGITAL TWIN · REPRESENTATION");
   await expect(twin.getByLabel("Observable history replay")).toBeVisible();
   await page.getByRole("button", { name: "1000×" }).click();
   await page.getByRole("button", { name: /Play/ }).click();
@@ -45,7 +45,24 @@ test("PM-01 3D twin binds assets to observable telemetry and replay", async ({ p
   await expect(page.getByText(/Simulator ground truth is not available/)).toBeVisible();
 });
 
-test("PM-01 Street View twin navigates linked panoramas with equipment context", async ({ page }) => {
+test("PM-01 CCTV representation switches plant cameras and shows observable context", async ({
+  page
+}) => {
+  await page.goto("/virtual-plant");
+  await page.getByRole("combobox", { name: "Choose plant view" }).selectOption("cctv");
+  const cctv = page.getByRole("region", { name: "CCTV plant capture demonstration" });
+  await expect(cctv).toContainText("CCTV OPERATIONS VIEW · REPRESENTATION");
+  await expect(
+    cctv.getByRole("complementary", { name: "Current CCTV equipment context" })
+  ).toBeVisible();
+  await cctv.getByRole("button", { name: /CAM-16 · Dispatch dock/ }).click();
+  await expect(cctv).toContainText("Warehouse loading ledge");
+  await expect(cctv).toContainText("No live CCTV stream");
+});
+
+test("PM-01 Street View twin navigates linked panoramas with equipment context", async ({
+  page
+}) => {
   await page.goto("/virtual-plant");
   await page.getByRole("combobox", { name: "Choose plant view" }).selectOption("machinery");
   const tour = page.getByRole("region", { name: /Chemical Industry Street View operational twin/ });
@@ -53,7 +70,9 @@ test("PM-01 Street View twin navigates linked panoramas with equipment context",
   await expect(tour.getByLabel("Drag to look around the 360 degree plant panorama")).toBeVisible();
   await tour.getByRole("button", { name: "Open panorama: Production process" }).click();
   await expect(tour.getByRole("heading", { name: "Production process" })).toBeVisible();
-  await expect(tour.getByRole("complementary", { name: "Current panorama equipment statistics" })).toContainText("R-301");
+  await expect(
+    tour.getByRole("complementary", { name: "Current panorama equipment statistics" })
+  ).toContainText("R-301");
   await tour.getByRole("button", { name: /Move forward to Final output/ }).click();
   await expect(tour.getByRole("heading", { name: "Final output & QC" })).toBeVisible();
   await tour.getByRole("button", { name: "Next Street View location" }).click();

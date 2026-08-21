@@ -34,6 +34,7 @@ import type { Pm01AssetView, Pm01DisplayStatus } from "../contracts/visualizatio
 import type { Pm01SimulationSpeed } from "../contracts/simulation";
 import { useFactorySimulation } from "../application/use-factory-simulation";
 import { Plant3dView } from "./plant-3d-view";
+import { PlantCctvView } from "./plant-cctv-view";
 import { PlantPanoramaTour } from "./plant-panorama-tour";
 
 const number = (value: number, digits = 1) =>
@@ -363,7 +364,7 @@ function AnimatedPlantView({
 
 type PlantProfile = (typeof PLANT_PROFILES)[number];
 type PlantScope = "overall" | "input" | "process" | "output";
-type PlantViewMode = "process" | "model3d" | "machinery" | "data";
+type PlantViewMode = "process" | "model3d" | "machinery" | "cctv" | "data";
 
 const SCOPE_LABELS: Record<PlantScope, string> = {
   overall: "Overall plant · A–Z",
@@ -559,13 +560,69 @@ function SectorProcessView({
 }
 
 const TOUR_STOPS = [
-  { id: "receiving", label: "Raw material receiving", nodeId: "receiving", flowIndex: 0, x: 8, y: 58, zoom: 1.75 },
-  { id: "storage", label: "Raw material storage", nodeId: "tank-farm", flowIndex: 0, x: 19, y: 48, zoom: 2.05 },
-  { id: "production", label: "Production process", nodeId: "reaction", flowIndex: 2, x: 46, y: 48, zoom: 2.15 },
-  { id: "quality", label: "Final output & QC", nodeId: "quality", flowIndex: 4, x: 64, y: 49, zoom: 2.05 },
-  { id: "packaging", label: "Packaging line", nodeId: "packaging", flowIndex: 5, x: 74, y: 52, zoom: 2.2 },
-  { id: "warehouse", label: "Finished-goods warehouse", nodeId: "finished-goods", flowIndex: 6, x: 86, y: 49, zoom: 1.95 },
-  { id: "loading", label: "Loading & unloading dock", nodeId: "dispatch", flowIndex: 7, x: 94, y: 61, zoom: 1.8 }
+  {
+    id: "receiving",
+    label: "Raw material receiving",
+    nodeId: "receiving",
+    flowIndex: 0,
+    x: 8,
+    y: 58,
+    zoom: 1.75
+  },
+  {
+    id: "storage",
+    label: "Raw material storage",
+    nodeId: "tank-farm",
+    flowIndex: 0,
+    x: 19,
+    y: 48,
+    zoom: 2.05
+  },
+  {
+    id: "production",
+    label: "Production process",
+    nodeId: "reaction",
+    flowIndex: 2,
+    x: 46,
+    y: 48,
+    zoom: 2.15
+  },
+  {
+    id: "quality",
+    label: "Final output & QC",
+    nodeId: "quality",
+    flowIndex: 4,
+    x: 64,
+    y: 49,
+    zoom: 2.05
+  },
+  {
+    id: "packaging",
+    label: "Packaging line",
+    nodeId: "packaging",
+    flowIndex: 5,
+    x: 74,
+    y: 52,
+    zoom: 2.2
+  },
+  {
+    id: "warehouse",
+    label: "Finished-goods warehouse",
+    nodeId: "finished-goods",
+    flowIndex: 6,
+    x: 86,
+    y: 49,
+    zoom: 1.95
+  },
+  {
+    id: "loading",
+    label: "Loading & unloading dock",
+    nodeId: "dispatch",
+    flowIndex: 7,
+    x: 94,
+    y: 61,
+    zoom: 1.8
+  }
 ] as const;
 
 function MachineryView({
@@ -636,17 +693,26 @@ function MachineryView({
       <div className="pm-photo-shade" />
       <header>
         <span className="pm-section-kicker">
-          {connected ? "Photorealistic operational twin" : "Illustrative plant tour"} · Stop {stopIndex + 1}/{TOUR_STOPS.length}
+          {connected ? "Photorealistic operational twin" : "Illustrative plant tour"} · Stop{" "}
+          {stopIndex + 1}/{TOUR_STOPS.length}
         </span>
         <h2>{stop.label}</h2>
-        <p>{profile.label} · {flowLabel} · move through the material journey</p>
+        <p>
+          {profile.label} · {flowLabel} · move through the material journey
+        </p>
       </header>
       <div className="pm-map-controls" aria-label="Plant visual navigation controls">
-        <button onClick={() => setManualZoom((value) => Math.min(0.8, value + 0.2))} aria-label="Zoom in">
+        <button
+          onClick={() => setManualZoom((value) => Math.min(0.8, value + 0.2))}
+          aria-label="Zoom in"
+        >
           <Plus size={15} />
         </button>
         <strong>{Math.round(imageZoom * 100)}%</strong>
-        <button onClick={() => setManualZoom((value) => Math.max(-0.7, value - 0.2))} aria-label="Zoom out">
+        <button
+          onClick={() => setManualZoom((value) => Math.max(-0.7, value - 0.2))}
+          aria-label="Zoom out"
+        >
           <Minus size={15} />
         </button>
         <button onClick={() => goToStop(stopIndex - 1)} aria-label="Move to previous plant area">
@@ -655,7 +721,13 @@ function MachineryView({
         <button onClick={() => goToStop(stopIndex + 1)} aria-label="Move to next plant area">
           <ChevronRight size={14} />
         </button>
-        <button onClick={() => { setManualZoom(0); goToStop(0); }} aria-label="Reset plant tour">
+        <button
+          onClick={() => {
+            setManualZoom(0);
+            goToStop(0);
+          }}
+          aria-label="Reset plant tour"
+        >
           <RotateCcw size={14} />
         </button>
         <button
@@ -663,7 +735,8 @@ function MachineryView({
           onClick={() => (tourActive ? setAutoTour((value) => !value) : startTour())}
           aria-pressed={autoTour}
         >
-          <Route size={14} /> {!tourActive ? "Take a Tour" : autoTour ? "Pause tour" : "Resume tour"}
+          <Route size={14} />{" "}
+          {!tourActive ? "Take a Tour" : autoTour ? "Pause tour" : "Resume tour"}
         </button>
       </div>
       <nav className="pm-tour-route" aria-label="Plant tour route">
@@ -674,22 +747,62 @@ function MachineryView({
             onClick={() => goToStop(index)}
             aria-label={`Go to ${item.label}`}
           >
-            <i>{index + 1}</i><span>{item.label}</span>
+            <i>{index + 1}</i>
+            <span>{item.label}</span>
           </button>
         ))}
       </nav>
-      <button className="pm-tour-forward" onClick={() => goToStop(stopIndex + 1)} aria-label={`Walk forward to ${TOUR_STOPS[(stopIndex + 1) % TOUR_STOPS.length]?.label}`}>
-        <MapPin size={18} /><span>Walk forward<small>{TOUR_STOPS[(stopIndex + 1) % TOUR_STOPS.length]?.label}</small></span><ChevronRight size={16} />
+      <button
+        className="pm-tour-forward"
+        onClick={() => goToStop(stopIndex + 1)}
+        aria-label={`Walk forward to ${TOUR_STOPS[(stopIndex + 1) % TOUR_STOPS.length]?.label}`}
+      >
+        <MapPin size={18} />
+        <span>
+          Walk forward<small>{TOUR_STOPS[(stopIndex + 1) % TOUR_STOPS.length]?.label}</small>
+        </span>
+        <ChevronRight size={16} />
       </button>
       <aside className="pm-photo-twin-panel" aria-label="Equipment telemetry at current tour stop">
-        <header><span>{connected ? "LIVE EQUIPMENT CONTEXT" : "ILLUSTRATIVE CONTEXT"}</span><strong>{asset ? `${asset.id} · ${asset.name}` : flowLabel}</strong><small>{node?.status ?? "Illustrative"} · {node ? `${number(node.throughputTonnesPerHour, 2)} T/h` : "model pending"}</small></header>
-        {connected && node && <div className="pm-photo-node-stats"><span>Material held<strong>{number(node.inventoryTonnes)} T</strong></span><span>Throughput<strong>{number(node.throughputTonnesPerHour, 2)} T/h</strong></span><span>State<strong>{node.active ? "Moving" : view?.run.status}</strong></span></div>}
+        <header>
+          <span>{connected ? "LIVE EQUIPMENT CONTEXT" : "ILLUSTRATIVE CONTEXT"}</span>
+          <strong>{asset ? `${asset.id} · ${asset.name}` : flowLabel}</strong>
+          <small>
+            {node?.status ?? "Illustrative"} ·{" "}
+            {node ? `${number(node.throughputTonnesPerHour, 2)} T/h` : "model pending"}
+          </small>
+        </header>
+        {connected && node && (
+          <div className="pm-photo-node-stats">
+            <span>
+              Material held<strong>{number(node.inventoryTonnes)} T</strong>
+            </span>
+            <span>
+              Throughput<strong>{number(node.throughputTonnesPerHour, 2)} T/h</strong>
+            </span>
+            <span>
+              State<strong>{node.active ? "Moving" : view?.run.status}</strong>
+            </span>
+          </div>
+        )}
         <div className="pm-photo-tag-grid">
-          {(asset?.tags.slice(0, 4) ?? []).map((tag) => <span key={tag.id}>{tag.name}<strong>{typeof tag.value === "number" ? number(tag.value, 2) : String(tag.value)} <small>{tag.engineeringUnit}</small></strong></span>)}
+          {(asset?.tags.slice(0, 4) ?? []).map((tag) => (
+            <span key={tag.id}>
+              {tag.name}
+              <strong>
+                {typeof tag.value === "number" ? number(tag.value, 2) : String(tag.value)}{" "}
+                <small>{tag.engineeringUnit}</small>
+              </strong>
+            </span>
+          ))}
         </div>
         {asset && <button onClick={() => onAsset(asset.id)}>Open equipment record</button>}
       </aside>
-      <p className="pm-photo-boundary">{connected ? "Observable operating data only · ground truth remains isolated." : "Illustrative imagery · not connected to plant telemetry."}</p>
+      <p className="pm-photo-boundary">
+        {connected
+          ? "Observable operating data only · ground truth remains isolated."
+          : "Illustrative imagery · not connected to plant telemetry."}
+      </p>
     </section>
   );
 }
@@ -1217,8 +1330,9 @@ export function VirtualFactory() {
                 onChange={(event) => setViewMode(event.target.value as PlantViewMode)}
               >
                 <option value="process">Diagrammatic process</option>
-                <option value="model3d">Actual plant · interactive 3D</option>
+                <option value="model3d">Connected digital twin · representation</option>
                 <option value="machinery">Take a Tour · Site imagery</option>
+                <option value="cctv">CCTV plant capture · representation</option>
                 <option value="data">Statistical view</option>
               </select>
             </label>
@@ -1289,6 +1403,16 @@ export function VirtualFactory() {
               onAsset={setSelectedAssetId}
             />
           )
+        ) : viewMode === "cctv" && sectorId === "chemical" ? (
+          <PlantCctvView view={simulation.view} />
+        ) : viewMode === "cctv" ? (
+          <MachineryView
+            key={`cctv-${activeProfile.id}-${scope}`}
+            profile={activeProfile}
+            scope={scope}
+            view={null}
+            onAsset={setSelectedAssetId}
+          />
         ) : sectorId === "chemical" && scope === "overall" ? (
           <>
             <KpiRail view={simulation.view} />

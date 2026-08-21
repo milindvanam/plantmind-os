@@ -167,33 +167,62 @@ export function Plant3dView({
             : "chemical";
     const layouts: Record<string, readonly { x: number; z: number }[]> = {
       dairy: [
-        { x: -8.5, z: -3.8 }, { x: -5.8, z: -3.8 }, { x: -2.5, z: -3.8 },
-        { x: 1, z: -3.8 }, { x: 4.5, z: -3.8 }, { x: 8, z: -3.8 },
-        { x: 4.8, z: 3.6 }, { x: 8.2, z: 3.6 }
+        { x: -8.5, z: -3.8 },
+        { x: -5.8, z: -3.8 },
+        { x: -2.5, z: -3.8 },
+        { x: 1, z: -3.8 },
+        { x: 4.5, z: -3.8 },
+        { x: 8, z: -3.8 },
+        { x: 4.8, z: 3.6 },
+        { x: 8.2, z: 3.6 }
       ],
       chemical: [
-        { x: -8, z: -4 }, { x: -3.7, z: -4 }, { x: 0, z: -3.5 },
-        { x: 4.2, z: -3.5 }, { x: 8, z: -3.5 }, { x: 7, z: 3.7 },
-        { x: 2.5, z: 3.7 }, { x: -4.5, z: 3.7 }
+        { x: -8, z: -4 },
+        { x: -3.7, z: -4 },
+        { x: 0, z: -3.5 },
+        { x: 4.2, z: -3.5 },
+        { x: 8, z: -3.5 },
+        { x: 7, z: 3.7 },
+        { x: 2.5, z: 3.7 },
+        { x: -4.5, z: 3.7 }
       ],
       msme: [
-        { x: -8, z: -3.8 }, { x: -4, z: -3.8 }, { x: 0, z: -3.8 },
-        { x: 4, z: -3.8 }, { x: 8, z: -3.8 }, { x: 5.5, z: 3.8 },
-        { x: 0.5, z: 3.8 }, { x: -5.5, z: 3.8 }
+        { x: -8, z: -3.8 },
+        { x: -4, z: -3.8 },
+        { x: 0, z: -3.8 },
+        { x: 4, z: -3.8 },
+        { x: 8, z: -3.8 },
+        { x: 5.5, z: 3.8 },
+        { x: 0.5, z: 3.8 },
+        { x: -5.5, z: 3.8 }
       ],
       "clean-tech": [
-        { x: -9, z: -4 }, { x: -6, z: -3 }, { x: -2.5, z: -3 },
-        { x: 1.5, z: -2.5 }, { x: 6, z: -2.5 }, { x: 8.5, z: 3.5 },
-        { x: 3.5, z: 4 }, { x: -4, z: 4 }
+        { x: -9, z: -4 },
+        { x: -6, z: -3 },
+        { x: -2.5, z: -3 },
+        { x: 1.5, z: -2.5 },
+        { x: 6, z: -2.5 },
+        { x: 8.5, z: 3.5 },
+        { x: 3.5, z: 4 },
+        { x: -4, z: 4 }
       ],
       sugar: [
-        { x: -9, z: -3.8 }, { x: -6, z: -3.8 }, { x: -2.5, z: -3.8 },
-        { x: 1, z: -3.8 }, { x: 4.5, z: -3.8 }, { x: 8, z: -3.8 },
-        { x: 4, z: 3.8 }, { x: -3, z: 3.8 }
+        { x: -9, z: -3.8 },
+        { x: -6, z: -3.8 },
+        { x: -2.5, z: -3.8 },
+        { x: 1, z: -3.8 },
+        { x: 4.5, z: -3.8 },
+        { x: 8, z: -3.8 },
+        { x: 4, z: 3.8 },
+        { x: -3, z: 3.8 }
       ]
     };
-    const positions = equipment.map((_, index) =>
-      layouts[industryKey]![index] ?? { x: (index % 4) * 5 - 7.5, z: Math.floor(index / 4) * 7 - 3.5 }
+    const positions = equipment.map(
+      (_, index) =>
+        layouts[industryKey]![index] ?? {
+          x: (index % 4) * 5 - 7.5,
+          z: Math.floor(index / 4) * 7 - 3.5
+        }
     );
     const liveObjects: LiveSceneObject[] = [];
 
@@ -254,7 +283,12 @@ export function Plant3dView({
       }
       if (/pasteur/i.test(item)) {
         for (let plate = -5; plate <= 5; plate += 1) {
-          addBox(unit, [0.08, 2.5, 1.7], [plate * 0.16, 1.55, 0], plate % 2 ? accent : hygienicSteel);
+          addBox(
+            unit,
+            [0.08, 2.5, 1.7],
+            [plate * 0.16, 1.55, 0],
+            plate % 2 ? accent : hygienicSteel
+          );
         }
         addBox(unit, [2.4, 0.18, 2], [0, 0.25, 0], darkSteel);
         return 3.1;
@@ -307,20 +341,33 @@ export function Plant3dView({
           return 2.5;
         }
         if (/absorber|silo/i.test(item)) {
-          addTank(unit, /absorber/i.test(item) ? 1.35 : 1, /absorber/i.test(item) ? 6.4 : 4.5, [0, /absorber/i.test(item) ? 3.3 : 2.35, 0], false, steel);
-          const cone = new THREE.Mesh(new THREE.ConeGeometry(/absorber/i.test(item) ? 1.35 : 1, 1, 28), steel);
+          addTank(
+            unit,
+            /absorber/i.test(item) ? 1.35 : 1,
+            /absorber/i.test(item) ? 6.4 : 4.5,
+            [0, /absorber/i.test(item) ? 3.3 : 2.35, 0],
+            false,
+            steel
+          );
+          const cone = new THREE.Mesh(
+            new THREE.ConeGeometry(/absorber/i.test(item) ? 1.35 : 1, 1, 28),
+            steel
+          );
           cone.position.y = /absorber/i.test(item) ? 7 : 5.1;
           unit.add(cone);
           return /absorber/i.test(item) ? 7.4 : 5.5;
         }
         addBox(unit, [3.5, 3.5, 2.8], [0, 1.8, 0], index % 2 ? glass : concrete);
-        for (let cell = -1; cell <= 1; cell += 1) addBox(unit, [0.65, 2.5, 2.2], [cell * 0.9, 1.55, 0], accent);
+        for (let cell = -1; cell <= 1; cell += 1)
+          addBox(unit, [0.65, 2.5, 2.2], [cell * 0.9, 1.55, 0], accent);
         return 4;
       }
       if (industryKey === "sugar") {
         if (/yard|mill/i.test(item)) {
           addBox(unit, [4, 0.35, 2.2], [0, 0.5, 0], darkSteel);
-          [-0.85, 0, 0.85].forEach((x) => addTank(unit, 0.5, 1.8, [x, 1.25, 0], true, steel).userData.animated = true);
+          [-0.85, 0, 0.85].forEach(
+            (x) => (addTank(unit, 0.5, 1.8, [x, 1.25, 0], true, steel).userData.animated = true)
+          );
           return 2.2;
         }
         if (/evapor|cryst/i.test(item)) {
@@ -329,7 +376,8 @@ export function Plant3dView({
         }
         if (/bag/i.test(item)) {
           addBox(unit, [4, 0.35, 1.3], [0, 0.7, 0], accent);
-          for (let bag = -3; bag <= 3; bag += 1) addBox(unit, [0.38, 0.65, 0.7], [bag * 0.52, 1.2, 0], product);
+          for (let bag = -3; bag <= 3; bag += 1)
+            addBox(unit, [0.38, 0.65, 0.7], [bag * 0.52, 1.2, 0], product);
           return 2;
         }
         addTank(unit, 1.25, 3.1, [0, 1.65, 0], false, steel);
@@ -340,7 +388,14 @@ export function Plant3dView({
         return 4;
       }
       if (/react|column|separ/i.test(item)) {
-        addTank(unit, 1.05, /column|separ/i.test(item) ? 6 : 4.6, [0, /column|separ/i.test(item) ? 3.1 : 2.4, 0], false, darkSteel);
+        addTank(
+          unit,
+          1.05,
+          /column|separ/i.test(item) ? 6 : 4.6,
+          [0, /column|separ/i.test(item) ? 3.1 : 2.4, 0],
+          false,
+          darkSteel
+        );
         for (let level = 1; level < 6; level += 1) {
           const ring = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.06, 8, 28), accent);
           ring.rotation.x = Math.PI / 2;
@@ -358,9 +413,10 @@ export function Plant3dView({
       const unit = new THREE.Group();
       unit.position.set(position.x, 0, position.z);
       unit.userData.index = index;
-      const height = industryKey === "dairy"
-        ? buildDairyUnit(unit, equipment[index]!)
-        : buildIndustrialUnit(unit, equipment[index]!, index);
+      const height =
+        industryKey === "dairy"
+          ? buildDairyUnit(unit, equipment[index]!)
+          : buildIndustrialUnit(unit, equipment[index]!, index);
       const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 16), accent);
       beacon.position.set(0, height + 0.25, 0);
       unit.add(beacon);
@@ -487,11 +543,13 @@ export function Plant3dView({
     <section className="pm-3d-view" aria-label={`${industry} ${section} interactive 3D plant`}>
       <canvas ref={canvasRef} aria-label="Interactive 3D plant model" />
       <header>
-        <span>{connected ? "CONNECTED OPERATIONAL TWIN" : "3D INDUSTRY MODEL"} · {section}</span>
+        <span>
+          {connected ? "CONNECTED DIGITAL TWIN · REPRESENTATION" : "3D INDUSTRY MODEL"} · {section}
+        </span>
         <h2>{industry}</h2>
         <p>
           {connected
-            ? `${displayedView?.run.status ?? "OFFLINE"} · observable telemetry · ${replayIndex === null ? "LIVE" : "HISTORICAL REPLAY"}`
+            ? `${displayedView?.run.status ?? "OFFLINE"} · simulated observable telemetry · ${replayIndex === null ? "CURRENT STATE" : "HISTORICAL REPLAY"}`
             : "Illustrative geometry · deterministic industry model pending"}
         </p>
       </header>
@@ -544,7 +602,10 @@ export function Plant3dView({
       <div className="pm-3d-metrics" aria-label="Section operating statistics">
         {(connected && displayedView
           ? [
-              ["Production rate", `${displayNumber(displayedView.kpis.productionRateTonnesPerDay)} T/day`],
+              [
+                "Production rate",
+                `${displayNumber(displayedView.kpis.productionRateTonnesPerDay)} T/day`
+              ],
               ["OEE", `${displayNumber(displayedView.kpis.oee.oee * 100)}%`],
               [
                 "Energy intensity",
@@ -566,18 +627,22 @@ export function Plant3dView({
         <aside className="pm-twin-asset-panel" aria-label="Selected asset live telemetry">
           <header>
             <span>SELECTED ASSET · {selectedNode.status}</span>
-            <strong>{selectedAsset ? `${selectedAsset.id} · ${selectedAsset.name}` : selectedNode.title}</strong>
+            <strong>
+              {selectedAsset ? `${selectedAsset.id} · ${selectedAsset.name}` : selectedNode.title}
+            </strong>
             <small>
-              {displayNumber(selectedNode.inventoryTonnes)} T held · {displayNumber(selectedNode.throughputTonnesPerHour, 2)} T/h
+              {displayNumber(selectedNode.inventoryTonnes)} T held ·{" "}
+              {displayNumber(selectedNode.throughputTonnesPerHour, 2)} T/h
             </small>
           </header>
           <div className="pm-twin-tags">
             {(selectedAsset?.tags.slice(0, 3) ?? []).map((tag) => {
               const samples = observableHistory
-                .map((snapshot) =>
-                  snapshot.assets
-                    .find((asset) => asset.id === selectedAsset?.id)
-                    ?.tags.find((candidate) => candidate.id === tag.id)?.value
+                .map(
+                  (snapshot) =>
+                    snapshot.assets
+                      .find((asset) => asset.id === selectedAsset?.id)
+                      ?.tags.find((candidate) => candidate.id === tag.id)?.value
                 )
                 .filter((value): value is number => typeof value === "number")
                 .slice(-18);
@@ -586,12 +651,17 @@ export function Plant3dView({
                 <div key={tag.id}>
                   <span>{tag.name}</span>
                   <strong>
-                    {typeof tag.value === "number" ? displayNumber(tag.value, 2) : String(tag.value)}{" "}
+                    {typeof tag.value === "number"
+                      ? displayNumber(tag.value, 2)
+                      : String(tag.value)}{" "}
                     <small>{tag.engineeringUnit}</small>
                   </strong>
                   <i aria-label={`${tag.name} recent observable trend`}>
                     {samples.map((sample, index) => (
-                      <b key={index} style={{ height: `${Math.max(8, (sample / maximum) * 100)}%` }} />
+                      <b
+                        key={index}
+                        style={{ height: `${Math.max(8, (sample / maximum) * 100)}%` }}
+                      />
                     ))}
                   </i>
                 </div>
@@ -599,7 +669,10 @@ export function Plant3dView({
             })}
             {selectedAsset?.tags.length === 0 && <p>No configured observable tags.</p>}
           </div>
-          <button onClick={() => selectedAsset && onAsset(selectedAsset.id)} disabled={!selectedAsset}>
+          <button
+            onClick={() => selectedAsset && onAsset(selectedAsset.id)}
+            disabled={!selectedAsset}
+          >
             Open asset record
           </button>
         </aside>
@@ -621,7 +694,11 @@ export function Plant3dView({
             value={replayIndex ?? observableHistory.length - 1}
             onChange={(event) => setReplayIndex(Number(event.target.value))}
           />
-          <time>{displayedView ? new Date(displayedView.run.timestamp).toLocaleTimeString("en-IN") : "—"}</time>
+          <time>
+            {displayedView
+              ? new Date(displayedView.run.timestamp).toLocaleTimeString("en-IN")
+              : "—"}
+          </time>
         </div>
       )}
       <p className="pm-twin-boundary">

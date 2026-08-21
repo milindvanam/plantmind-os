@@ -1,6 +1,6 @@
 # PlantMind OS Current State
 
-Last repository audit: 2026-08-20 (Asia/Kolkata).
+Last repository audit: 2026-08-22 (Asia/Kolkata).
 
 ## Current release state
 
@@ -54,6 +54,7 @@ PlantMind is a working multi-experience prototype. Its most advanced physical pr
 - Industry selector for chemical, MSME manufacturing, clean-tech EPC/bulk handling, dairy and sugar landscapes.
 - Interactive 3D views; the chemical model is connected to observable state/history.
 - Seven-stop chemical panorama tour with direct drag, wheel zoom, linked movement and an observable equipment hotspot.
+- Representative CCTV operations wall with four selectable plant-area captures and PM-01 observable context overlays.
 
 ## Implemented AI/intelligence features
 
@@ -61,7 +62,7 @@ Only curated deterministic preview experiences are implemented. There is no live
 
 ## Implemented digital-twin features
 
-The chemical PM-01 3D and panorama views consume `Pm01FactoryView`, show observable state and permit equipment inspection. Hidden simulator ground truth is isolated. Dairy, sugar, MSME and clean-tech scenes are illustrative and are not connected digital twins.
+The chemical PM-01 3D and panorama views consume `Pm01FactoryView`, show observable state and permit equipment inspection. The 3D experience is explicitly labelled a connected digital-twin representation. The CCTV view uses representative imagery and simulated observable context, not live cameras or computer-vision inference. Hidden simulator ground truth is isolated. Dairy, sugar, MSME and clean-tech scenes are illustrative and are not connected digital twins.
 
 ## Testing status
 
@@ -73,6 +74,7 @@ The repository contains unit, component, integration, architecture and Playwrigh
 - Vitest: **PASS** — 19 files passed, 1 skipped; 76 tests passed, 1 skipped.
 - Playwright: updated navigation and text-size assertions pass, including persistence after reload. The Playwright process required manual termination after all assertions because its temporary web-server cleanup hung on this Windows host.
 - Production build: **PASS** — Next.js compiled, type-checked and generated all 22 pages/routes.
+- CCTV/twin checkpoint: **PASS** — focused unit coverage, ESLint, TypeScript and production build passed; focused Playwright assertions ran with the known Windows runner cleanup behavior.
 
 ## Known issues and technical debt
 
@@ -88,6 +90,7 @@ The repository contains unit, component, integration, architecture and Playwrigh
 - No live PLC/DCS/SCADA/historian/MES/LIMS/CMMS/ERP connector or write-back exists.
 - Other industry landscapes lack industry-specific physical models and observable twins.
 - Panorama imagery is prototype imagery, not calibrated customer 360 photography or photogrammetry.
+- CCTV captures are representative prototype imagery, not connected cameras, recorded customer footage or a production VMS integration.
 - External Netlify configuration is not version-controlled.
 - Existing older documents describe earlier route counts/milestones and must be read as historical snapshots, not the current total application state.
 - Five tracked PM-01 UI/CSS/E2E files pre-date this handover in a non-Prettier-clean state.

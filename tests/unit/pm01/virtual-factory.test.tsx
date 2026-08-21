@@ -66,4 +66,21 @@ describe("PM-01 virtual factory", () => {
     expect(screen.getByText(/Simulator ground truth is not available/)).toBeVisible();
     expect(document.body).not.toHaveTextContent("fouling index");
   });
+
+  it("offers an honestly labelled CCTV representation with observable context", () => {
+    render(<VirtualFactory />);
+    fireEvent.change(screen.getByRole("combobox", { name: "Choose plant view" }), {
+      target: { value: "cctv" }
+    });
+
+    expect(screen.getByRole("region", { name: "CCTV plant capture demonstration" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Plant visual surveillance" })).toBeVisible();
+    expect(screen.getByText("REC · REPRESENTATION")).toBeVisible();
+    expect(
+      screen.getByRole("complementary", { name: "Current CCTV equipment context" })
+    ).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: /CAM-16 · Dispatch dock/ }));
+    expect(screen.getByText("Warehouse loading ledge")).toBeVisible();
+    expect(screen.getByText(/No live CCTV stream/)).toBeVisible();
+  });
 });

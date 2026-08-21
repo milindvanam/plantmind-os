@@ -1,6 +1,6 @@
 # PlantMind OS Development Status
 
-**Status date:** 20 Aug 2026 (Asia/Kolkata)  
+**Status date:** 22 Aug 2026 (Asia/Kolkata)
 **Repository:** `milindvanam/plantmind-os`  
 **Branch:** `main`  
 **Purpose:** Concise product-development control document. This file summarizes verified repository state; detailed technical evidence remains in `CURRENT_STATE.md`, `MILESTONES.md`, architecture documents, tests and Git history.
@@ -28,6 +28,7 @@ The prototype already demonstrates a credible virtual-plant foundation. The larg
 | Virtual Factory | COMPLETE AS PROTOTYPE | `/virtual-plant`, process topology, statistical panels, asset drill-down, simulation controls and observable projection |
 | Chemical interactive 3D twin | COMPLETE AS PROTOTYPE | 3D chemical scene connected to observable PM-01 state/history |
 | Immersive panorama twin | COMPLETE AS PROTOTYPE | Seven linked 360° chemical panoramas with drag, zoom, navigation and observable equipment hotspot |
+| CCTV operations representation | COMPLETE AS PROTOTYPE | Four selectable representative plant cameras with simulated observable PM-01 equipment and process overlays; no live CCTV connection |
 | Other industry landscapes | PARTIAL | Chemical, MSME manufacturing, clean-tech EPC/bulk handling, dairy and sugar visual landscapes exist, but only chemical PM-01 has a physical connected model |
 | PlantMind AI / intelligence | NOT YET IMPLEMENTED | Current AI experiences are curated deterministic previews; no live LLM/agent runtime, production ML inference, evidence/confidence engine or autonomous workflow |
 | Live industrial connectivity | NOT YET IMPLEMENTED | No live PLC/DCS/SCADA/historian/MES/LIMS/CMMS/ERP connector or governed write-back |
